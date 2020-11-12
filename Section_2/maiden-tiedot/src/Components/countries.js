@@ -19,7 +19,6 @@ const CountryInfo = ({ countryInfo }) => {
         axios.get(`http://api.weatherstack.com/current?access_key=${api_key}&query=${countryInfo.capital}`)
             .then(response => {
                 setWeather(response.data)
-                console.log(response.data)
             })
     }, [countryInfo])
 
@@ -44,23 +43,27 @@ const CountryInfo = ({ countryInfo }) => {
     )
 }
 
-const ShowCountryInfoBtn = () => {
+const ShowCountryInfoBtn = ({setShowCountryInfo}) => {
     return (
-        <button>
+        <button onClick={setShowCountryInfo}>
             Show
         </button>
     )
 }
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, showCountryInfo, setShowCountryInfo }) => {
+    const [country, setCountry] = useState('');
+    console.log(showCountryInfo);
+    
     if (countries.length > 10) {
         return (
             <div>
                 <p>Too many matches, please specify another filter</p>
             </div>
         );
-    } else if (countries.length === 1) {
-        const countryInfo = countries.reduce(country => country)
+    } else if (showCountryInfo === true | countries.length === 1 ) {
+        console.log(countries);
+        const countryInfo = showCountryInfo ? countries.filter(country => country.name.includes(country)) : countries.reduce(country => country)
         return (
             <CountryInfo countryInfo={countryInfo} />
         )
@@ -70,7 +73,7 @@ const Countries = ({ countries }) => {
                 <ul>
                     {countries.map(country =>
                         <li key={country.name}>
-                            {country.name} <ShowCountryInfoBtn />
+                            {country.name} <ShowCountryInfoBtn setShowCountryInfo={setShowCountryInfo} />
                         </li>
                     )}
                 </ul>

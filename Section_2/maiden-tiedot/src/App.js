@@ -6,7 +6,8 @@ import axios from 'axios';
 const App = () => {
     const [filter, setFilter] = useState('')
     const [countries, setCountries] = useState([])
-    const [filtering, setFiltering] = useState(false);
+    const [filtering, setFiltering] = useState(false)
+    const [showCountryInfo, setShowCountryInfo] = useState(false);
 
     useEffect(() => {
         axios.get('https://restcountries.eu/rest/v2/all')
@@ -25,11 +26,12 @@ const App = () => {
     }
 
     const countriesToShow = filtering ? countries.filter(country => country.name.toLowerCase().startsWith(filter.toLowerCase())) : countries
+    const bool = showCountryInfo
 
     return (
         <div>
             <Filter filter={filter} handleCountryChange={handleCountryChange} />
-            <Countries countries={countriesToShow} />
+            <Countries countries={countriesToShow} showCountryInfo={bool} setShowCountryInfo={() => setShowCountryInfo(!showCountryInfo)} />
         </div>
     )
 }
