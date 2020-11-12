@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Countries from './Components/countries'
 import Filter from './Components/filter'
+import CountryInfo from './Components/countryInfo'
 import axios from 'axios';
 
 const App = () => {
@@ -8,6 +9,7 @@ const App = () => {
     const [countries, setCountries] = useState([])
     const [filtering, setFiltering] = useState(false)
     const [showCountryInfo, setShowCountryInfo] = useState(false);
+    const [country, setCountry] = useState({})
 
     useEffect(() => {
         axios.get('https://restcountries.eu/rest/v2/all')
@@ -25,13 +27,24 @@ const App = () => {
         setFilter(event.target.value)
     }
 
+    const handleCountryInfo = (event) => {
+        const countryName = event.target.parentElement.firstChild.data
+        const countryObj = countries.filter(country => country.name.startsWith(countryName)).reduce(country => country)
+        setCountry(countryObj)
+        setShowCountryInfo(!showCountryInfo)
+    }
+
     const countriesToShow = filtering ? countries.filter(country => country.name.toLowerCase().startsWith(filter.toLowerCase())) : countries
-    const bool = showCountryInfo
 
     return (
         <div>
             <Filter filter={filter} handleCountryChange={handleCountryChange} />
-            <Countries countries={countriesToShow} showCountryInfo={bool} setShowCountryInfo={() => setShowCountryInfo(!showCountryInfo)} />
+            {
+                showCountryInfo ?
+                    <CountryInfo countryInfo={country} setShowCountryInfo={() => setShowCountryInfo(!showCountryInfo)} /> :
+                    <Countries countries={countriesToShow} setShowCountryInfo={handleCountryInfo} />
+            }
+
         </div>
     )
 }
