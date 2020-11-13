@@ -2,27 +2,17 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "040-123456",
+      "number": "112233445",
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
+      "name": "Kaisa Virtanen",
+      "number": "04-12345675",
       "id": 4
     },
     {
-      "name": "Ville Virtanen",
-      "number": "050-1234567",
+      "name": "Kalle Virtanen",
+      "number": "044-1166559",
       "id": 5
     }
   ]

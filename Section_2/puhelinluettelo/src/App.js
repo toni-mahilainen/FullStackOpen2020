@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PersonsService from './Services/persons'
+import Persons from './Components/persons'
 
 const Header = ({ text }) => {
     return (
@@ -17,23 +18,15 @@ const Filter = ({ filter, handleFiltering }) => {
 
 const AddNewForm = (props) => {
     return (
-        <form onSubmit={props.addName}>
+        <form onSubmit={props.handleAddOrUpdate}>
             <div>
-                name: <input value={props.newName} onChange={props.handleNameChange} /><br />
-        number: <input value={props.newNumber} onChange={props.handleNumberChange} />
+                Name: <input value={props.newName} onChange={props.handleNameChange} /><br />
+                Number: <input value={props.newNumber} onChange={props.handleNumberChange} />
             </div>
             <div>
                 <button type="submit">add</button>
             </div>
         </form>
-    )
-}
-
-const Persons = ({ namesToShow }) => {
-    return (
-        <ul>
-            {namesToShow.map(person => <li key={person.name}>{person.name} {person.number}</li>)}
-        </ul>
     )
 }
 
@@ -49,7 +42,6 @@ const App = () => {
             .getAll()
             .then(persons => {
                 setPersons(persons)
-                console.log(persons)
             })
     }, []);
 
@@ -70,23 +62,55 @@ const App = () => {
         setFilter(event.target.value)
     }
 
-    const addName = (event) => {
+    const handleAddOrUpdate = (event) => {
         event.preventDefault()
         const names = persons.map(person => person.name)
-        if (!names.includes(newName)) {
-            const newPerson = {
-                name: newName,
+        names.includes(newName) ? updateNumber() : addName()
+    }
+
+    const addName = () => {
+        const newPerson = {
+            name: newName,
+            number: newNumber
+        }
+        PersonsService
+            .create(newPerson)
+            .then(returnedPerson => {
+                setPersons(persons.concat(returnedPerson))
+                setNewName('')
+                setNewNumber('')
+            })
+    }
+
+    const updateNumber = () => {
+        const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+        if (confirm) {
+            const person = persons.find(person => person.name === newName)
+            const updatedPerson = {
+                ...person,
                 number: newNumber
             }
+            console.log(person);
             PersonsService
-                .create(newPerson)
+                .update(person.id, updatedPerson)
                 .then(returnedPerson => {
-                    setPersons(persons.concat(returnedPerson))
+                    setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
                     setNewName('')
                     setNewNumber('')
                 })
-        } else {
-            alert(`${newName} is already added to phonebook`)
+        }
+    }
+
+    const deleteName = (id) => {
+        const person = persons.find(person => person.id === id)
+        const confirm = window.confirm(`Are you sure you want to delete ${person.name} from phonebook?`)
+        if (confirm) {
+            PersonsService
+                .remove(id)
+                .then(() => {
+                    const newPersons = persons.filter(person => person.id !== id);
+                    setPersons(newPersons)
+                })
         }
     }
 
@@ -100,12 +124,12 @@ const App = () => {
             <AddNewForm
                 newName={newName}
                 newNumber={newNumber}
-                addName={addName}
+                handleAddOrUpdate={handleAddOrUpdate}
                 handleNameChange={handleNameChange}
                 handleNumberChange={handleNumberChange}
             />
             <Header text='Numbers' />
-            <Persons namesToShow={namesToShow} />
+            <Persons namesToShow={namesToShow} deleteName={(id) => deleteName(id)} />
         </div>
     )
 
