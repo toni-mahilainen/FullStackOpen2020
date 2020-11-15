@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import PersonsService from './Services/persons'
 import Persons from './Components/persons'
+import Notification from './Components/notification'
 
 const Header = ({ text }) => {
     return (
@@ -36,6 +37,8 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [filter, setFilter] = useState('')
     const [filtering, setFiltering] = useState(false)
+    const [notificationMessage, setNotificationMessage] = useState(null);
+    const [successNotification, setSuccessNotification] = useState(true);
 
     useEffect(() => {
         PersonsService
@@ -68,6 +71,14 @@ const App = () => {
         names.includes(newName) ? updateNumber() : addName()
     }
 
+    const showNotification = (text) => {
+        setNotificationMessage(text)
+
+        setTimeout(() => {
+            setNotificationMessage(null)
+        }, 5000)
+    }
+
     const addName = () => {
         const newPerson = {
             name: newName,
@@ -76,9 +87,15 @@ const App = () => {
         PersonsService
             .create(newPerson)
             .then(returnedPerson => {
+                setSuccessNotification(true)
+                showNotification(`Succesfully added ${returnedPerson.name}`)
                 setPersons(persons.concat(returnedPerson))
                 setNewName('')
                 setNewNumber('')
+            })
+            .catch(error => {
+                setSuccessNotification(false)
+                showNotification(`Error happened while adding ${error.name} to the phonebook`)
             })
     }
 
@@ -94,9 +111,15 @@ const App = () => {
             PersonsService
                 .update(person.id, updatedPerson)
                 .then(returnedPerson => {
+                    setSuccessNotification(true)
+                    showNotification(`Succesfully updated ${returnedPerson.name}`)
                     setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
                     setNewName('')
                     setNewNumber('')
+                })
+                .catch(error => {
+                    setSuccessNotification(false)
+                    showNotification(`Error happened while updating the number for ${person.name}`)
                 })
         }
     }
@@ -108,8 +131,14 @@ const App = () => {
             PersonsService
                 .remove(id)
                 .then(() => {
+                    setSuccessNotification(true)
+                    showNotification(`Succesfully deleted ${person.name}`)
                     const newPersons = persons.filter(person => person.id !== id);
                     setPersons(newPersons)
+                })
+                .catch(error => {
+                    setSuccessNotification(false)
+                    showNotification(`Error happened while deleting ${person.name} from phonebook`)
                 })
         }
     }
@@ -118,6 +147,7 @@ const App = () => {
 
     return (
         <div>
+            <Notification message={notificationMessage} successNotification={successNotification} />
             <Header text='Phonebook' />
             <Filter filter={filter} handleFiltering={handleFiltering} />
             <Header text='Add a new' />
