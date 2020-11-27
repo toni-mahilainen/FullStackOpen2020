@@ -4,7 +4,7 @@ const Blog = ({ blog }) => (
     <div>
         <ul>
             <li>
-                {blog.title} {blog.author}
+                <b>Title:</b> {blog.title} <b>Author:</b> {blog.author}
             </li>
         </ul>
     </div>

@@ -18,15 +18,21 @@ const App = () => {
     const [url, setUrl] = useState('');
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs)
-        )
+        getBlogs()
     }, [])
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('loggedUser'))
-        setUser(loggedUser)
+        if (loggedUser) {
+            setUser(loggedUser)
+            blogService.setToken(loggedUser.token)
+        }
     }, [])
+
+    const getBlogs = async () => {
+        const blogs = await blogService.getAll()
+        setBlogs(blogs)
+    }
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -64,22 +70,30 @@ const App = () => {
             author,
             url
         }
+
         try {
-            const loggedUser = JSON.parse(localStorage.getItem('loggedUser'))
-            blogService.setToken(loggedUser.token)
             const addedBlog = await blogService.create(newBlog)
+
             setBlogs(blogs.concat(addedBlog))
             setNotificationType('success')
             setNotificationMessage(`a new blog ${addedBlog.title} by ${addedBlog.author} added`)
+
             setTitle('')
             setAuthor('')
             setUrl('')
+
             setTimeout(() => {
                 setNotificationMessage(null)
                 setNotificationType('')
             }, 5000)
         } catch (error) {
-            console.log(error);
+            setNotificationType('error')
+            setNotificationMessage('Error detected while adding a new blog')
+
+            setTimeout(() => {
+                setNotificationMessage(null)
+                setNotificationType('')
+            }, 5000)
         }
 
     }
@@ -87,6 +101,7 @@ const App = () => {
     const loginForm = () => {
         return (
             <div>
+
                 <h2>Log in</h2>
                 <form onSubmit={handleLogin}>
                     <div>
@@ -153,6 +168,7 @@ const App = () => {
 
     return (
         <div>
+            <h1>Bloglist app</h1>
             <Notification type={notificationType} message={notificationMessage} />
             {
                 user ?
