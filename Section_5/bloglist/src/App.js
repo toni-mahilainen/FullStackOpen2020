@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import './App.css'
-import Blogs from './components/Blogs'
+import Blog from './components/Blog'
 import Button from './components/Button'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
@@ -30,7 +30,8 @@ const App = () => {
 
     const getBlogs = async () => {
         const blogs = await blogService.getAll()
-        setBlogs(blogs)
+        const sortedBlogs = blogs.sort((obj1, obj2) => obj1.likes - obj2.likes)
+        setBlogs(sortedBlogs)
     }
 
     const handleLogin = async (e) => {
@@ -82,7 +83,14 @@ const App = () => {
                 setNotificationType('')
             }, 5000)
         }
+    }
 
+    const updateBlog = async (id, newBlogObj) => {
+        const blogsCopy = [...blogs]
+        const updatedBlog = await blogService.update(id, newBlogObj)
+        const updatedBlogIndex = blogsCopy.findIndex(blog => blog.id === updatedBlog.id)
+        blogsCopy.splice(updatedBlogIndex, 1, updatedBlog)
+        setBlogs(blogsCopy)
     }
 
     const loginForm = () => {
@@ -128,12 +136,19 @@ const App = () => {
             <Notification type={notificationType} message={notificationMessage} />
             {
                 user ?
-                    <div>
-                        <Button type='button' text='log out' onClick={handleLogOut} />
-                        <p>{user.name} logged in</p>
+                    <Fragment>
+                        <div>
+                            <Button type='button' text='log out' onClick={handleLogOut} />
+                            <p>{user.name} logged in</p>
+                        </div>
                         {newBlogForm()}
-                        <Blogs blogs={blogs} />
-                    </div>
+                        <div>
+                            <h2>blogs</h2>
+                            {blogs.map(blog =>
+                                <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+                            )}
+                        </div>
+                    </Fragment>
                     : loginForm()
             }
         </div>

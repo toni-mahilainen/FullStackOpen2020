@@ -1,9 +1,19 @@
 import React, { useState } from 'react'
 import Button from './Button'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
     const [showInfo, setShowInfo] = useState(false);
-    // const [buttonText, setButtonText] = useState('show info');
+
+    const buttonStyle = {
+        marginLeft: '5px'
+    }
+
+    const addLike = async () => {
+        updateBlog(blog.id, {
+            ...blog,
+            likes: blog.likes + 1
+        })
+    }
 
     const blogInfo = () => {
         return (
@@ -12,17 +22,14 @@ const Blog = ({ blog }) => {
                     <b>Url:</b> {blog.url}
                 </li>
                 <li>
-                    <b>Likes:</b> {blog.likes} <Button type='button' text='like' />
+                    <b>Likes:</b> {blog.likes}
+                    <Button style={buttonStyle} type='button' text='like' onClick={addLike} />
                 </li>
                 <li>
                     <b>Author:</b> {blog.author}
                 </li>
             </ul>
         )
-    }
-
-    const buttonStyle = {
-        marginLeft: '5px'
     }
 
     return (
