@@ -93,6 +93,22 @@ const App = () => {
         setBlogs(blogsCopy)
     }
 
+    const deleteBlog = async (id) => {
+        try {
+            await blogService.remove(id)
+            const updatedBlogs = blogs.filter(blog => blog.id !== id)
+            setBlogs(updatedBlogs)
+        } catch (error) {
+            setNotificationType('error')
+            setNotificationMessage('Error detected while deleting the blog')
+
+            setTimeout(() => {
+                setNotificationMessage(null)
+                setNotificationType('')
+            }, 5000)
+        }
+    }
+
     const loginForm = () => {
         return (
             <div>
@@ -129,7 +145,6 @@ const App = () => {
             </Togglable>
         )
     }
-
     return (
         <div>
             <h1>Bloglist app</h1>
@@ -145,7 +160,12 @@ const App = () => {
                         <div>
                             <h2>blogs</h2>
                             {blogs.map(blog =>
-                                <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+                                <Blog key={blog.id}
+                                    blog={blog}
+                                    updateBlog={updateBlog}
+                                    deleteBlog={deleteBlog}
+                                    user={user}
+                                />
                             )}
                         </div>
                     </Fragment>

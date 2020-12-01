@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import Button from './Button'
+import '../App.css'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     const [showInfo, setShowInfo] = useState(false);
 
     const buttonStyle = {
@@ -15,9 +16,13 @@ const Blog = ({ blog, updateBlog }) => {
         })
     }
 
+    const handleDelete = () => {
+        deleteBlog(blog.id)
+    }
+
     const blogInfo = () => {
         return (
-            <ul>
+            <ul className='blogInfoList'>
                 <li>
                     <b>Url:</b> {blog.url}
                 </li>
@@ -28,9 +33,12 @@ const Blog = ({ blog, updateBlog }) => {
                 <li>
                     <b>Author:</b> {blog.author}
                 </li>
+
             </ul>
         )
     }
+
+    const isSignedUser = user.username === blog.user.username
 
     return (
         <div>
@@ -43,6 +51,15 @@ const Blog = ({ blog, updateBlog }) => {
                         text={showInfo ? 'hide info' : 'show info'}
                         onClick={() => setShowInfo(!showInfo)}
                     />
+                    {
+                        showInfo && isSignedUser ?
+                            <Button
+                                style={buttonStyle}
+                                type='button'
+                                text='delete'
+                                onClick={handleDelete}
+                            /> : null
+                    }
                 </li>
                 {
                     showInfo ? blogInfo() : null
