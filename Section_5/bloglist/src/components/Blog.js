@@ -28,8 +28,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
                     <b>Url:</b> {blog.url}
                 </li>
                 <li>
-                    <b>Likes:</b> {blog.likes}
-                    <Button style={buttonStyle} type='button' text='like' onClick={addLike} />
+                    <b>Likes:</b> <span>{blog.likes}</span>
+                    <Button id='likeBtn' style={buttonStyle} type='button' text='like' onClick={addLike} />
                 </li>
                 <li>
                     <b>Author:</b> {blog.author}
@@ -47,6 +47,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
                 <li>
                     {blog.title}
                     <Button
+                        id='toggleBlogInfoBtn'
                         style={buttonStyle}
                         type='button'
                         text={showInfo ? 'hide info' : 'show info'}
