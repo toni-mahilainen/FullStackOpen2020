@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 
-const NewBlogForm = ({createBlog}) => {
+const NewBlogForm = ({ createBlog }) => {
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [url, setUrl] = useState('');
-    
+
     const addNewBlog = (e) => {
         e.preventDefault()
 
@@ -25,6 +25,7 @@ const NewBlogForm = ({createBlog}) => {
             <form onSubmit={addNewBlog}>
                 <div>
                     <input
+                        id='title'
                         type="text"
                         value={title}
                         name='Title'
@@ -34,6 +35,7 @@ const NewBlogForm = ({createBlog}) => {
                 </div>
                 <div>
                     <input
+                        id='author'
                         type="text"
                         value={author}
                         name='Author'
@@ -43,6 +45,7 @@ const NewBlogForm = ({createBlog}) => {
                 </div>
                 <div>
                     <input
+                        id='url'
                         type="text"
                         value={url}
                         name='Url'
