@@ -28,7 +28,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
                     <b>Url:</b> {blog.url}
                 </li>
                 <li>
-                    <b>Likes:</b> <span>{blog.likes}</span>
+                    <b>Likes:</b> <span className='likes'>{blog.likes}</span>
                     <Button id='likeBtn' style={buttonStyle} type='button' text='like' onClick={addLike} />
                 </li>
                 <li>
@@ -47,7 +47,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
                 <li>
                     {blog.title}
                     <Button
-                        id='toggleBlogInfoBtn'
+                        className='toggleBlogInfoBtn'
                         style={buttonStyle}
                         type='button'
                         text={showInfo ? 'hide info' : 'show info'}
@@ -56,6 +56,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
                     {
                         showInfo && isSignedUser ?
                             <Button
+                                id='deleteBlogBtn'
                                 style={buttonStyle}
                                 type='button'
                                 text='delete'

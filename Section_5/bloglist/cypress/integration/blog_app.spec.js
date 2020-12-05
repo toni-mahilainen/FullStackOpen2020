@@ -1,13 +1,16 @@
+import 'cypress-react-selector'
+
 describe('Blog app', function () {
     beforeEach(function () {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
-        const user = {
-            name: 'Toni Mahilainen',
-            username: 'tonima',
-            password: 'salainen'
-        }
-        cy.request('POST', 'http://localhost:3001/api/users/', user)
+        cy.createUser({ 
+            name: 'Toni Mahilainen', username: 'tonima', password: 'salainen' 
+        })
+        cy.createUser({ 
+            name: 'Mikko Lahtinen', username: 'mikkola', password: 'salaisempi' 
+        })
         cy.visit('http://localhost:3000')
+
     })
 
     it('Login form is shown', function () {
@@ -34,7 +37,7 @@ describe('Blog app', function () {
                 .and('have.css', 'color', 'rgb(255, 0, 0)')
         })
 
-        describe.only('When logged in', function () {
+        describe('When logged in', function () {
             beforeEach(function () {
                 cy.login({
                     username: 'tonima', password: 'salainen'
@@ -45,7 +48,8 @@ describe('Blog app', function () {
                 cy.createBlog({
                     title: 'The blog 1',
                     author: 'Toni Mahilainen',
-                    url: 'https://blog.theblog1.com'
+                    url: 'https://blog.theblog1.com',
+                    likes: 0
                 })
 
                 cy.contains('The blog 1')
@@ -56,27 +60,80 @@ describe('Blog app', function () {
                     cy.createBlog({
                         title: 'The blog 1',
                         author: 'Toni Mahilainen',
-                        url: 'https://blog.theblog1.com'
+                        url: 'https://blog.theblog1.com',
+                        likes: 1
                     })
                 })
 
                 it('existing blog can be liked', function () {
-                    cy.get('#toggleBlogInfoBtn').click()
+                    cy.get('.toggleBlogInfoBtn').click()
 
                     cy.get('#likeBtn').parent().find('span')
                         .then((span) => {
-                            // capture what num is right now
                             const likesAtStart = parseInt(span.text())
 
                             cy.get('#likeBtn').click()
                                 .then(() => {
-                                    // now capture it again
                                     const likesAtEnd = parseFloat(span.text())
 
-                                    // make sure it's what we expected
                                     expect(likesAtEnd).to.eq(likesAtStart + 1)
                                 })
                         })
+                })
+
+                it('the blog can also be deleted', function () {
+                    cy.get('.toggleBlogInfoBtn').click()
+
+                    cy.get('#deleteBlogBtn').click()
+                    cy.contains('The blog 1').should('not.exist')
+                })
+
+                it('only the user who added the blog can delete it', function () {
+                    cy.get('#logoutBtn').click()
+
+                    cy.login({
+                        username: 'mikkola', password: 'salaisempi'
+                    })
+
+                    cy.get('.toggleBlogInfoBtn').click()
+                    cy.get('#deleteBlogBtn').should('not.exist')
+                })
+
+                describe('When multiple blogs are created', function () {
+                    beforeEach(function () {
+                        cy.createBlog({
+                            title: 'The blog 2',
+                            author: 'Toni Mahilainen',
+                            url: 'https://blog.theblog2.com',
+                            likes: 2
+                        })
+
+                        cy.createBlog({
+                            title: 'The blog 20',
+                            author: 'Toni Mahilainen',
+                            url: 'https://blog.theblog20.com',
+                            likes: 20
+                        })
+
+                        cy.createBlog({
+                            title: 'The blog 32',
+                            author: 'Toni Mahilainen',
+                            url: 'https://blog.theblog32.com',
+                            likes: 32
+                        })
+                    })
+
+                    it('blogs are sorted by likes descending', function () {
+                        cy.get('.toggleBlogInfoBtn').each(button => cy.get(button).click())
+                        cy.get('.likes')
+                            .should(objArray => {
+                                const arrayLastIngex = objArray.length - 1
+                                const likesLastBlog = Number(objArray[arrayLastIngex].innerHTML)
+                                const likesFirstBlog = Number(objArray[0].innerHTML)
+
+                                expect(likesLastBlog).to.be.lessThan(likesFirstBlog)
+                            })
+                    })
                 })
             })
         })

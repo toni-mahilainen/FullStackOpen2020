@@ -30,7 +30,7 @@ const App = () => {
 
     const getBlogs = async () => {
         const blogs = await blogService.getAll()
-        const sortedBlogs = blogs.sort((obj1, obj2) => obj1.likes - obj2.likes)
+        const sortedBlogs = blogs.sort((obj1, obj2) => obj2.likes - obj1.likes)
         setBlogs(sortedBlogs)
     }
 
@@ -155,7 +155,7 @@ const App = () => {
                 user ?
                     <Fragment>
                         <div>
-                            <Button type='button' text='log out' onClick={handleLogOut} />
+                            <Button id='logoutBtn' type='button' text='log out' onClick={handleLogOut} />
                             <p>{user.name} logged in</p>
                         </div>
                         {newBlogForm()}
