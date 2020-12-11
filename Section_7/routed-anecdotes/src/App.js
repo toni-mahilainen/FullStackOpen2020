@@ -14,8 +14,10 @@ import AnecdoteList from './Components/AnecdoteList'
 import CreateNew from './Components/CreateNew'
 import Footer from './Components/Footer'
 import Menu from './Components/Menu'
+import Notification from './Components/Notification'
 
 const App = () => {
+    const history = useHistory()
     const [anecdotes, setAnecdotes] = useState([
         {
             content: 'If it hurts, do it more often',
@@ -37,6 +39,11 @@ const App = () => {
     const addNew = (anecdote) => {
         anecdote.id = (Math.random() * 10000).toFixed(0)
         setAnecdotes(anecdotes.concat(anecdote))
+        history.push('/')
+        setNotification(`a new anecdote "${anecdote.content}" created!`)
+        setTimeout(() => {
+            setNotification('')
+        }, 10000)
     }
 
     const anecdoteById = (id) =>
@@ -57,6 +64,9 @@ const App = () => {
         <div>
             <h1>Software anecdotes</h1>
             <Menu />
+            {
+                notification !== '' ? <Notification message={notification} /> : null
+            }
             <Switch>
                 <Route path='/anecdote/:id'>
                     <Anecdote anecdotes={anecdotes} />
