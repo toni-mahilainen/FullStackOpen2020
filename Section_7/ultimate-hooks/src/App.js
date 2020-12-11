@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 
@@ -72,7 +71,7 @@ const App = () => {
         <div>
             <h2>notes</h2>
             <form onSubmit={handleNoteSubmit}>
-                <input name='content' {...content} />
+                <input {...content} />
                 <button>create</button>
             </form>
             {notes.map(n => <p key={n.id}>{n.content}</p>)}
