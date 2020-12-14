@@ -1,99 +1,46 @@
-import React, { useState, useEffect, Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import './App.css'
-import Blog from './components/Blog'
 import Button from './components/Button'
 import NewBlogForm from './components/NewBlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
-import loginService from './services/login'
-import { setNotification, hideNotification } from './reducers/notificationReducer'
 import { getBlogs } from './reducers/blogReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import BlogList from './components/BlogList'
+import { login, logout, stayIn } from './reducers/userReducer'
 
 const App = () => {
     const dispatch = useDispatch()
-    const [blogs, setBlogs] = useState([])
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null);
+    const user = useSelector(state => state.user)
 
     useEffect(() => {
         dispatch(getBlogs())
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         const loggedUser = JSON.parse(localStorage.getItem('loggedUser'))
         if (loggedUser) {
-            setUser(loggedUser)
             blogService.setToken(loggedUser.token)
+            dispatch(stayIn(loggedUser))
         }
-    }, [])
+    }, [dispatch])
 
     const handleLogin = async (e) => {
         e.preventDefault()
 
-        try {
-            const loggedUser = await loginService.login({
-                username, password
-            })
-            localStorage.setItem('loggedUser', JSON.stringify(loggedUser))
-            blogService.setToken(loggedUser.token)
-            setUser(loggedUser)
-            setUsername('')
-            setPassword('')
-        } catch (error) {
-            dispatch(setNotification('error', 'Invalid username or password'))
-            setTimeout(() => {
-                dispatch(hideNotification())
-            }, 5000)
+        const credentials = {
+            username: e.target.username.value,
+            password: e.target.password.value
         }
+
+        dispatch(login(credentials))
     }
 
     const handleLogOut = (e) => {
         e.preventDefault()
-        localStorage.removeItem('loggedUser')
-        setUser(null)
-    }
-
-    const addNewBlog = async (blogObj) => {
-        try {
-            const addedBlog = await blogService.create(blogObj)
-            setBlogs(blogs.concat(addedBlog))
-
-            dispatch(setNotification('success', `a new blog "${addedBlog.title}" by ${addedBlog.author} added`))
-            setTimeout(() => {
-                dispatch(hideNotification())
-            }, 5000)
-        } catch (error) {
-            dispatch(setNotification('error', 'Error detected while adding a new blog'))
-            setTimeout(() => {
-                dispatch(hideNotification())
-            }, 5000)
-        }
-    }
-
-    const updateBlog = async (id, newBlogObj) => {
-        const blogsCopy = [...blogs]
-        const updatedBlog = await blogService.update(id, newBlogObj)
-        const updatedBlogIndex = blogsCopy.findIndex(blog => blog.id === updatedBlog.id)
-        blogsCopy.splice(updatedBlogIndex, 1, updatedBlog)
-        setBlogs(blogsCopy)
-    }
-
-    const deleteBlog = async (id) => {
-        try {
-            await blogService.remove(id)
-            const updatedBlogs = blogs.filter(blog => blog.id !== id)
-            setBlogs(updatedBlogs)
-        } catch (error) {
-            dispatch(setNotification('error', 'Error detected while deleting the blog'))
-
-            setTimeout(() => {
-                dispatch(hideNotification())
-            }, 5000)
-        }
+        
+        dispatch(logout())
     }
 
     const loginForm = () => {
@@ -105,20 +52,16 @@ const App = () => {
                         <input
                             id="username"
                             type="text"
-                            value={username}
-                            name='Username'
+                            name='username'
                             placeholder='Username'
-                            onChange={({ target }) => setUsername(target.value)}
                         />
                     </div>
                     <div>
                         <input
                             id="password"
                             type="password"
-                            value={password}
-                            name='Password'
+                            name='password'
                             placeholder='Password'
-                            onChange={({ target }) => setPassword(target.value)}
                         />
                     </div>
                     <button id="loginBtn" type="submit" >login</button>
@@ -130,7 +73,7 @@ const App = () => {
     const newBlogForm = () => {
         return (
             <Togglable buttonLabel='create new blog'>
-                <NewBlogForm createBlog={addNewBlog} />
+                <NewBlogForm />
             </Togglable>
         )
     }
@@ -146,7 +89,7 @@ const App = () => {
                             <p>{user.name} logged in</p>
                         </div>
                         {newBlogForm()}
-                        <BlogList updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
+                        <BlogList user={user}/>
                     </Fragment>
                     : loginForm()
             }

@@ -1,24 +1,28 @@
 import React, { useState } from 'react'
 import Button from './Button'
 import '../App.css'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateBlog, deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
+const Blog = ({ blog, user }) => {
+    const dispatch = useDispatch()
     const [showInfo, setShowInfo] = useState(false);
 
     const buttonStyle = {
         marginLeft: '5px'
     }
 
-    const addLike = async () => {
-        updateBlog(blog.id, {
-            ...blog,
-            likes: blog.likes + 1
-        })
+    const addLike = () => {
+        dispatch(
+            updateBlog(blog.id, {
+                ...blog,
+                likes: blog.likes + 1
+            })
+        )
     }
 
     const handleDelete = () => {
-        deleteBlog(blog.id)
+        dispatch(deleteBlog(blog.id))
     }
 
     const blogInfo = () => {
@@ -72,9 +76,8 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
     )
 }
 
-const BlogList = ({ updateBlog, deleteBlog, user }) => {
+const BlogList = ({ deleteBlog, user }) => {
     const blogs = useSelector(state => state.blogs.sort((obj1, obj2) => obj2.likes - obj1.likes))
-    console.log('sortedBlogs', blogs);
     return (
         <div>
             <h2>blogs</h2>
@@ -82,7 +85,6 @@ const BlogList = ({ updateBlog, deleteBlog, user }) => {
                 blogs.map(blog =>
                     <Blog key={blog.id}
                         blog={blog}
-                        updateBlog={updateBlog}
                         deleteBlog={deleteBlog}
                         user={user}
                     />

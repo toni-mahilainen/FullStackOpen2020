@@ -18,7 +18,16 @@ const create = async (blogInfo) => {
     }
 
     const response = await axios.post(baseUrl, blogInfo, config)
-    return response.data
+    const loggedUser = JSON.parse(localStorage.getItem('loggedUser'))
+    const createdBlog = {
+        ...response.data,
+        user: {
+            username: loggedUser.username,
+            name: loggedUser.name,
+            id: response.data.user
+        }
+    }
+    return createdBlog
 }
 
 const update = async (id, blogInfo) => {

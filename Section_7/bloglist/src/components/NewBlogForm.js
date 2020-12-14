@@ -1,22 +1,22 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { createNewBlog } from '../reducers/blogReducer'
 
-const NewBlogForm = ({ createBlog }) => {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [url, setUrl] = useState('');
+const NewBlogForm = () => {
+    const dispatch = useDispatch()
 
     const addNewBlog = (e) => {
         e.preventDefault()
 
-        createBlog({
-            title,
-            author,
-            url
-        })
+        dispatch(createNewBlog({
+            title: e.target.title.value,
+            author: e.target.author.value,
+            url: e.target.url.value
+        }))
 
-        setTitle('')
-        setAuthor('')
-        setUrl('')
+        e.target.title.value = ''
+        e.target.author.value = ''
+        e.target.url.value = ''
     }
 
     return (
@@ -27,30 +27,24 @@ const NewBlogForm = ({ createBlog }) => {
                     <input
                         id='title'
                         type="text"
-                        value={title}
-                        name='Title'
+                        name='title'
                         placeholder='Title'
-                        onChange={({ target }) => setTitle(target.value)}
                     />
                 </div>
                 <div>
                     <input
                         id='author'
                         type="text"
-                        value={author}
-                        name='Author'
+                        name='author'
                         placeholder='Author'
-                        onChange={({ target }) => setAuthor(target.value)}
                     />
                 </div>
                 <div>
                     <input
                         id='url'
                         type="text"
-                        value={url}
-                        name='Url'
+                        name='url'
                         placeholder='Url'
-                        onChange={({ target }) => setUrl(target.value)}
                     />
                 </div>
                 <button type="submit" >create</button>
