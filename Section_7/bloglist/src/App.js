@@ -8,7 +8,9 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification, hideNotification } from './reducers/notificationReducer'
+import { getBlogs } from './reducers/blogReducer'
 import { useDispatch } from 'react-redux'
+import BlogList from './components/BlogList'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -18,7 +20,7 @@ const App = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        getBlogs()
+        dispatch(getBlogs())
     }, [])
 
     useEffect(() => {
@@ -28,12 +30,6 @@ const App = () => {
             blogService.setToken(loggedUser.token)
         }
     }, [])
-
-    const getBlogs = async () => {
-        const blogs = await blogService.getAll()
-        const sortedBlogs = blogs.sort((obj1, obj2) => obj2.likes - obj1.likes)
-        setBlogs(sortedBlogs)
-    }
 
     const handleLogin = async (e) => {
         e.preventDefault()
@@ -150,17 +146,7 @@ const App = () => {
                             <p>{user.name} logged in</p>
                         </div>
                         {newBlogForm()}
-                        <div>
-                            <h2>blogs</h2>
-                            {blogs.map(blog =>
-                                <Blog key={blog.id}
-                                    blog={blog}
-                                    updateBlog={updateBlog}
-                                    deleteBlog={deleteBlog}
-                                    user={user}
-                                />
-                            )}
-                        </div>
+                        <BlogList updateBlog={updateBlog} deleteBlog={deleteBlog} user={user}/>
                     </Fragment>
                     : loginForm()
             }
