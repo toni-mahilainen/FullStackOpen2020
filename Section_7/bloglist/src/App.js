@@ -10,16 +10,20 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { getBlogs } from './reducers/blogReducer'
 import { stayIn } from './reducers/userReducer'
+import { getUsers } from './reducers/usersReducer'
 import blogService from './services/blogs'
 import { Route, Switch } from 'react-router-dom'
 import UsersList from './components/UsersList'
+import UserInfo from './components/UserInfo'
 
 const App = () => {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user)
+    const users = useSelector(state => state.users)
 
     useEffect(() => {
         dispatch(getBlogs())
+        dispatch(getUsers())
     }, [dispatch])
 
     useEffect(() => {
@@ -43,11 +47,14 @@ const App = () => {
                         </Togglable>
                         <Menu />
                         <Switch>
+                            <Route path='/users/:id'>
+                                <UserInfo users={users} />
+                            </Route>
                             <Route exact path='/'>
                                 <BlogList />
                             </Route>
                             <Route path='/users'>
-                                <UsersList />
+                                <UsersList users={users} />
                             </Route>
                         </Switch>
                     </Fragment> : <LoginForm />
