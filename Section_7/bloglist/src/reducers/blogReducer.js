@@ -4,7 +4,7 @@ import { setNotification } from './notificationReducer'
 const reducer = (state = [], action) => {
     switch (action.type) {
         case 'GET_BLOGS':
-            state = action.data.blogs
+            state = action.data
             return state
 
         case 'CREATE_BLOG':
@@ -28,9 +28,7 @@ export const getBlogs = () => {
         const blogs = await blogService.getAll()
         dispatch({
             type: 'GET_BLOGS',
-            data: {
-                blogs
-            }
+            data: blogs
         })
     }
 }

@@ -76,11 +76,12 @@ const Blog = ({ blog, user }) => {
     )
 }
 
-const BlogList = ({ deleteBlog, user }) => {
+const BlogList = () => {
+    const user = useSelector(state => state.user)
     const blogs = useSelector(state => state.blogs.sort((obj1, obj2) => obj2.likes - obj1.likes))
     return (
         <div>
-            <h2>blogs</h2>
+            <h2>Blogs</h2>
             {
                 blogs.map(blog =>
                     <Blog key={blog.id}
