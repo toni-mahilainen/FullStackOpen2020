@@ -1,84 +1,21 @@
-import React, { useState } from 'react'
-import Button from './Button'
+import React from 'react'
 import '../App.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateBlog, deleteBlog } from '../reducers/blogReducer'
+import { deleteBlog } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, user }) => {
-    const dispatch = useDispatch()
-    const [showInfo, setShowInfo] = useState(false);
-
-    const buttonStyle = {
-        marginLeft: '5px'
-    }
-
-    const addLike = () => {
-        dispatch(
-            updateBlog(blog.id, {
-                ...blog,
-                likes: blog.likes + 1
-            })
-        )
-    }
-
-    const handleDelete = () => {
-        dispatch(deleteBlog(blog.id))
-    }
-
-    const blogInfo = () => {
-        return (
-            <ul className='blogInfoList'>
-                <li>
-                    <b>Url:</b> {blog.url}
-                </li>
-                <li>
-                    <b>Likes:</b> <span className='likes'>{blog.likes}</span>
-                    <Button id='likeBtn' style={buttonStyle} type='button' text='like' onClick={addLike} />
-                </li>
-                <li>
-                    <b>Author:</b> {blog.author}
-                </li>
-
-            </ul>
-        )
-    }
-
-    const isSignedUser = user.username === blog.user.username
-
+const Blog = ({ blog }) => {
     return (
         <div>
             <ul>
                 <li>
-                    {blog.title}
-                    <Button
-                        className='toggleBlogInfoBtn'
-                        style={buttonStyle}
-                        type='button'
-                        text={showInfo ? 'hide info' : 'show info'}
-                        onClick={() => setShowInfo(!showInfo)}
-                    />
-                    {
-                        showInfo && isSignedUser ?
-                            <Button
-                                id='deleteBlogBtn'
-                                style={buttonStyle}
-                                type='button'
-                                text='delete'
-                                onClick={handleDelete}
-                            /> : null
-                    }
+                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
                 </li>
-                {
-                    showInfo ? blogInfo() : null
-                }
             </ul>
         </div>
     )
 }
 
-const BlogList = () => {
-    const user = useSelector(state => state.user)
-    const blogs = useSelector(state => state.blogs.sort((obj1, obj2) => obj2.likes - obj1.likes))
+const BlogList = ({ blogs, user }) => {
     return (
         <div>
             <h2>Blogs</h2>

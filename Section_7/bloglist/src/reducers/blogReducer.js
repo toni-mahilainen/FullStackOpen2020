@@ -70,6 +70,7 @@ export const deleteBlog = (id) => {
                 type: 'DELETE_BLOG',
                 data: { id }
             })
+            dispatch(setNotification('success', 'The blog has deleted successfully!', 5))
         } catch (error) {
             dispatch(setNotification('error', 'Error detected while deleting the blog', 5))
         }

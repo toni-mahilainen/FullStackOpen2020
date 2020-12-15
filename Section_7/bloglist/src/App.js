@@ -15,9 +15,11 @@ import blogService from './services/blogs'
 import { Route, Switch } from 'react-router-dom'
 import UsersList from './components/UsersList'
 import UserInfo from './components/UserInfo'
+import BlogInfo from './components/BlogInfo'
 
 const App = () => {
     const dispatch = useDispatch()
+    const blogs = useSelector(state => state.blogs.sort((obj1, obj2) => obj2.likes - obj1.likes))
     const user = useSelector(state => state.user)
     const users = useSelector(state => state.users)
 
@@ -50,11 +52,14 @@ const App = () => {
                             <Route path='/users/:id'>
                                 <UserInfo users={users} />
                             </Route>
-                            <Route exact path='/'>
-                                <BlogList />
-                            </Route>
                             <Route path='/users'>
                                 <UsersList users={users} />
+                            </Route>
+                            <Route path='/blogs/:id'>
+                                <BlogInfo blogs={blogs} user={user} />
+                            </Route>
+                            <Route path='/'>
+                                <BlogList blogs={blogs} user={user} />
                             </Route>
                         </Switch>
                     </Fragment> : <LoginForm />
