@@ -33,15 +33,16 @@ const BlogComments = ({ blogId, comments }) => {
                             placeholder='Comment'
                         />
                     </div>
-                    <button id="addCommentBtn" type="submit" >add comment</button>
+                    <button id="addCommentBtn" type="submit" >Add comment</button>
                 </form>
             </div>
             <table>
                 <tbody>
-                    { comments.length !== 0 ? 
-                        comments.map(comment =>
-                            <tr key={comment.id}><td>{comment.comment}</td></tr>
-                        ) : <h3>No comments :)</h3>
+                    {
+                        comments.length !== 0 ?
+                            comments.map(comment =>
+                                <tr key={comment.id}><td>{comment.comment}</td></tr>
+                            ) : <h3>No comments :)</h3>
                     }
                 </tbody>
             </table>
@@ -54,7 +55,6 @@ const BlogInfo = ({ blogs, user }) => {
     const history = useHistory()
     const id = useParams().id
     const blog = blogs ? blogs.find(blog => blog.id === id) : null
-
 
     const addLike = () => {
         dispatch(
@@ -81,7 +81,7 @@ const BlogInfo = ({ blogs, user }) => {
                         <table>
                             <tbody>
                                 <tr><td><a href={blog.url}>{blog.url}</a></td></tr>
-                                <tr><td>{blog.likes} likes <Button id='likeBtn' type='button' text='like' onClick={addLike} /></td></tr>
+                                <tr><td>{blog.likes} likes <Button id='likeBtn' type='button' text='Like' onClick={addLike} /></td></tr>
                                 <tr><td>added by {blog.user.name}</td></tr>
                             </tbody>
                         </table>
@@ -90,7 +90,7 @@ const BlogInfo = ({ blogs, user }) => {
                                 <Button
                                     id='deleteBlogBtn'
                                     type='button'
-                                    text='delete'
+                                    text='Delete'
                                     onClick={handleDelete}
                                 /> : null
                         }

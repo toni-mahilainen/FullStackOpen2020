@@ -53,7 +53,7 @@ const App = () => {
                         <Menu />
                         <LoggedInNotification />
                         <div className='wrapper'>
-                            <Togglable buttonLabel='create new blog'>
+                            <Togglable buttonLabel='Create new blog'>
                                 <NewBlogForm />
                             </Togglable>
                             <Switch>

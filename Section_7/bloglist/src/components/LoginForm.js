@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
+import './LoginForm.css'
 
 const LoginForm = () => {
     const dispatch = useDispatch()
@@ -16,7 +17,7 @@ const LoginForm = () => {
     }
 
     return (
-        <div>
+        <div className='login-form'>
             <h2>Log in</h2>
             <form onSubmit={handleLogin}>
                 <div>
@@ -35,7 +36,7 @@ const LoginForm = () => {
                         placeholder='Password'
                     />
                 </div>
-                <button id="loginBtn" type="submit" >login</button>
+                <button id="loginBtn" type="submit" >Login</button>
             </form>
         </div>
     )

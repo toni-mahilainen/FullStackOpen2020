@@ -16,24 +16,30 @@ a {
     color: white;
 }
 
-.error {
-    color: red;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+button {
+    margin: 5px 0;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-.success {
-    color: green;
-    background: lightgrey;
-    font-size: 20px;
-    border-style: solid;
+input {
+    margin: 5px 0;
+    padding: 5px;
+    color: white;
+    background-color: rgba(245, 245, 245, .2);
     border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+    border: whitesmoke 1px solid;
+}
+
+::placeholder {
+    color: white;
+}
+
+button:hover {
+    color: teal;
 }
 
 .blogInfoList {

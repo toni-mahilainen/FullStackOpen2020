@@ -24,3 +24,7 @@
 .blogs-table tr:hover {
     background-color: #ddd;
 }
+
+#likeBtn:hover {
+    color: lightskyblue;
+}

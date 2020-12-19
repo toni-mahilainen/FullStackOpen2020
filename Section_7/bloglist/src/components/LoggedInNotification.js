@@ -16,8 +16,8 @@ const LoggedInNotification = () => {
 
     return (
         <div className='logged-in-notification'>
-        <p>{user.name} logged in</p>
-        <Button id='logoutBtn' type='button' text='log out' onClick={handleLogOut} />
+        <p><b>{user.name}</b> logged in</p>
+        <Button id='logoutBtn' type='button' text='Log out' onClick={handleLogOut} />
         </div>
     )
 }
