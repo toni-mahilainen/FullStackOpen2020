@@ -1,12 +1,48 @@
 import React, { Fragment } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
-import { updateBlog, deleteBlog } from '../reducers/blogReducer'
+import { commentBlog, updateBlog, deleteBlog } from '../reducers/blogReducer'
+
 import Button from './Button'
 
-const BlogComments = () => {
+const BlogComments = ({ blogId, comments }) => {
+    const dispatch = useDispatch()
+
+    const addComment = async (e) => {
+        e.preventDefault()
+
+        dispatch(
+            commentBlog(blogId, {
+                comment: e.target.comment.value
+            })
+        )
+
+        e.target.comment.value = ''
+    }
     return (
-        <h3>Comments</h3>
+        <div>
+            <h3>Comments</h3>
+            <div>
+                <form onSubmit={addComment}>
+                    <div>
+                        <input
+                            id="username"
+                            type="text"
+                            name='comment'
+                            placeholder='Comment'
+                        />
+                    </div>
+                    <button id="addCommentBtn" type="submit" >add comment</button>
+                </form>
+            </div>
+            <ul>
+                {
+                    comments.map(comment =>
+                        <li key={comment.id}>{comment.comment}</li>
+                    )
+                }
+            </ul>
+        </div>
     )
 }
 
@@ -15,6 +51,7 @@ const BlogInfo = ({ blogs, user }) => {
     const history = useHistory()
     const id = useParams().id
     const blog = blogs ? blogs.find(blog => blog.id === id) : null
+
 
     const addLike = () => {
         dispatch(
@@ -50,10 +87,10 @@ const BlogInfo = ({ blogs, user }) => {
                                     onClick={handleDelete}
                                 /> : null
                         }
+                        <BlogComments blogId={blog.id} comments={blog.comments} />
                     </Fragment>
                     : <h2>Loading...</h2>
             }
-            <BlogComments />
         </div>
     );
 }

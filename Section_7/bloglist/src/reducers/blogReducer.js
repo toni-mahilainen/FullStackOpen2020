@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import commentService from '../services/comments'
 import { setNotification } from './notificationReducer'
 
 const reducer = (state = [], action) => {
@@ -12,6 +13,18 @@ const reducer = (state = [], action) => {
 
         case 'UPDATE_BLOG':
             state = state.map(blog => blog.id !== action.data.id ? blog : action.data)
+            return state
+
+        case 'COMMENT_BLOG':
+            const blog = state.find(blog => blog.id === action.data.id)
+            const updatedBlog = {
+                ...blog,
+                comments: [...blog.comments, {
+                    comment: action.data.addedCommentObj.comment,
+                    id: action.data.addedCommentObj.id
+                }]
+            }
+            state = state.map(blog => blog.id !== action.data.id ? blog : updatedBlog)
             return state
 
         case 'DELETE_BLOG':
@@ -55,6 +68,20 @@ export const updateBlog = (id, blogObj) => {
             dispatch({
                 type: 'UPDATE_BLOG',
                 data: updatedBlog
+            })
+        } catch (error) {
+            dispatch(setNotification('error', 'Error detected while updating the blog', 5))
+        }
+    }
+}
+
+export const commentBlog = (id, comment) => {
+    return async dispatch => {
+        try {
+            const addedCommentObj = await commentService.create(id, comment)
+            dispatch({
+                type: 'COMMENT_BLOG',
+                data: { id, addedCommentObj }
             })
         } catch (error) {
             dispatch(setNotification('error', 'Error detected while updating the blog', 5))
