@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '../reducers/userReducer'
 import Button from './Button'
+import './LoggedInNotification.css'
 
 const LoggedInNotification = () => {
     const dispatch = useDispatch()
@@ -14,9 +15,9 @@ const LoggedInNotification = () => {
     }
 
     return (
-        <div>
-            <Button id='logoutBtn' type='button' text='log out' onClick={handleLogOut} />
-            <p>{user.name} logged in</p>
+        <div className='logged-in-notification'>
+        <p>{user.name} logged in</p>
+        <Button id='logoutBtn' type='button' text='log out' onClick={handleLogOut} />
         </div>
     )
 }

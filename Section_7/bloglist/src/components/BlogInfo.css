@@ -1,0 +1,52 @@
+.blog-info {
+    text-align: center;
+}
+
+.blog-info {
+    text-align: center;
+    margin-top: 1em;
+}
+
+.blog-info table {
+    margin: 1em auto;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: whitesmoke 1px solid;
+    border-radius: 15px;
+}
+
+.blog-info td {
+    padding: 8px;
+}
+
+.blog-info tr:nth-child(even) {
+    background-color: teal;
+    border-radius: 15px;
+}
+
+.blog-comments {
+    text-align: center;
+}
+
+.blog-comments {
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.blog-comments table {
+    margin: 1em auto;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    border: whitesmoke 1px solid;
+    border-radius: 15px;
+}
+
+.blog-comments td {
+    padding: 8px;
+}
+
+.blog-comments tr:nth-child(even) {
+    background-color: teal;
+    border-radius: 15px;
+}

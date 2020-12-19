@@ -1,3 +1,21 @@
+body {
+    margin: 0;
+}
+
+.app {
+    height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 1em;
+}
+
+a {
+    color: white;
+}
+
 .error {
     color: red;
     background: lightgrey;
@@ -20,4 +38,10 @@
 
 .blogInfoList {
     line-height: 1.5rem;
+}
+
+.wrapper {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-around;
 }

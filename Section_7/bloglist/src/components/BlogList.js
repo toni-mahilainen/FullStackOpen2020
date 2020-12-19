@@ -1,34 +1,34 @@
 import React from 'react'
-import '../App.css'
 import { deleteBlog } from '../reducers/blogReducer'
 import { Link } from 'react-router-dom'
+import './BlogList.css'
 
-const Blog = ({ blog }) => {
-    return (
-        <div>
-            <ul>
-                <li>
-                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                </li>
-            </ul>
-        </div>
-    )
-}
+const Blog = ({ blog }) =>
+    <tr>
+        <td>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </td>
+    </tr>
+
 
 const BlogList = ({ blogs, user }) => {
     return (
-        <div>
+        <div className='blogs-table'>
             <h2>Blogs</h2>
-            {
-                blogs.map(blog =>
-                    <Blog key={blog.id}
-                        blog={blog}
-                        deleteBlog={deleteBlog}
-                        user={user}
-                    />
-                )
-            }
-        </div>
+            <table>
+                <tbody>
+                    {
+                        blogs.map(blog =>
+                            <Blog key={blog.id}
+                                blog={blog}
+                                deleteBlog={deleteBlog}
+                                user={user}
+                            />
+                        )
+                    }
+                </tbody>
+            </table>
+        </div >
     )
 }
 

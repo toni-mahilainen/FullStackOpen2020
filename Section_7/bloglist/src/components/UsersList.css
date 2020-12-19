@@ -1,0 +1,41 @@
+.users {
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.users table {
+    margin: auto;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 30%;
+    border: whitesmoke 1px solid;
+    border-radius: 15px;
+}
+
+.users td {
+    padding: 8px;
+}
+
+.users tr:nth-child(even) {
+    background-color: teal;
+}
+
+.users tr:hover {
+    background-color: #ddd;
+}
+
+.users th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: teal;
+    color: white;
+}
+
+.name-th {
+    border-radius: 15px 0 0 0;
+}
+
+.blogs-created-th {
+    border-radius: 0 15px 0 0;
+}

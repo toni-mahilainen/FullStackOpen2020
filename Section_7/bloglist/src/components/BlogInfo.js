@@ -2,8 +2,8 @@ import React, { Fragment } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
 import { commentBlog, updateBlog, deleteBlog } from '../reducers/blogReducer'
-
 import Button from './Button'
+import './BlogInfo.css'
 
 const BlogComments = ({ blogId, comments }) => {
     const dispatch = useDispatch()
@@ -20,7 +20,8 @@ const BlogComments = ({ blogId, comments }) => {
         e.target.comment.value = ''
     }
     return (
-        <div>
+        <div className='blog-comments'>
+            <hr />
             <h3>Comments</h3>
             <div>
                 <form onSubmit={addComment}>
@@ -35,13 +36,15 @@ const BlogComments = ({ blogId, comments }) => {
                     <button id="addCommentBtn" type="submit" >add comment</button>
                 </form>
             </div>
-            <ul>
-                {
-                    comments.map(comment =>
-                        <li key={comment.id}>{comment.comment}</li>
-                    )
-                }
-            </ul>
+            <table>
+                <tbody>
+                    { comments.length !== 0 ? 
+                        comments.map(comment =>
+                            <tr key={comment.id}><td>{comment.comment}</td></tr>
+                        ) : <h3>No comments :)</h3>
+                    }
+                </tbody>
+            </table>
         </div>
     )
 }
@@ -70,14 +73,18 @@ const BlogInfo = ({ blogs, user }) => {
     const isSignedUser = user && blog ? user.username === blog.user.username : false
 
     return (
-        <div>
+        <div className='blog-info'>
             {
                 blog ?
                     <Fragment>
                         <h2>{blog.title}</h2>
-                        <a href={blog.url}>{blog.url}</a>
-                        <p>{blog.likes} likes <Button id='likeBtn' type='button' text='like' onClick={addLike} /></p>
-                        <p>added by {blog.user.name}</p>
+                        <table>
+                            <tbody>
+                                <tr><td><a href={blog.url}>{blog.url}</a></td></tr>
+                                <tr><td>{blog.likes} likes <Button id='likeBtn' type='button' text='like' onClick={addLike} /></td></tr>
+                                <tr><td>added by {blog.user.name}</td></tr>
+                            </tbody>
+                        </table>
                         {
                             isSignedUser ?
                                 <Button

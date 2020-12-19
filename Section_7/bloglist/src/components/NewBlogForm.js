@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../reducers/blogReducer'
+import './NewBlogForm.css'
 
 const NewBlogForm = () => {
     const dispatch = useDispatch()
@@ -19,9 +20,13 @@ const NewBlogForm = () => {
         e.target.url.value = ''
     }
 
+    const resetMargin = {
+        marginTop: 0
+    }
+
     return (
         <div>
-            <h2>Create new blog</h2>
+            <h2 style={resetMargin}>Create new blog</h2>
             <form onSubmit={addNewBlog}>
                 <div>
                     <input

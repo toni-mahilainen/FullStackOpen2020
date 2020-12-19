@@ -1,0 +1,26 @@
+.blogs-table {
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.blogs-table table {
+    margin: auto;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 30%;
+    border: whitesmoke 1px solid;
+    border-radius: 15px;
+}
+
+.blogs-table td {
+    padding: 8px;
+}
+
+.blogs-table tr:nth-child(even) {
+    background-color: teal;
+}
+
+.blogs-table tr:hover {
+    background-color: #ddd;
+}

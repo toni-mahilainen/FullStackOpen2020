@@ -16,6 +16,7 @@ import { Route, Switch } from 'react-router-dom'
 import UsersList from './components/UsersList'
 import UserInfo from './components/UserInfo'
 import BlogInfo from './components/BlogInfo'
+import backgroundImage from './images/background.jpg'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -36,32 +37,40 @@ const App = () => {
         }
     }, [dispatch])
 
+    const style = {
+        backgroundImage: `url(${backgroundImage})`,
+        height: '100vh',
+        color: 'white'
+    }
+
     return (
-        <div>
+        <div style={style} className='app'>
             <h1>Bloglist app</h1>
             <Notification />
             {
                 user ?
                     <Fragment>
-                        <LoggedInNotification />
-                        <Togglable buttonLabel='create new blog'>
-                            <NewBlogForm />
-                        </Togglable>
                         <Menu />
-                        <Switch>
-                            <Route path='/users/:id'>
-                                <UserInfo users={users} />
-                            </Route>
-                            <Route path='/users'>
-                                <UsersList users={users} />
-                            </Route>
-                            <Route path='/blogs/:id'>
-                                <BlogInfo blogs={blogs} user={user} />
-                            </Route>
-                            <Route path='/'>
-                                <BlogList blogs={blogs} user={user} />
-                            </Route>
-                        </Switch>
+                        <LoggedInNotification />
+                        <div className='wrapper'>
+                            <Togglable buttonLabel='create new blog'>
+                                <NewBlogForm />
+                            </Togglable>
+                            <Switch>
+                                <Route path='/users/:id'>
+                                    <UserInfo users={users} />
+                                </Route>
+                                <Route path='/users'>
+                                    <UsersList users={users} />
+                                </Route>
+                                <Route path='/blogs/:id'>
+                                    <BlogInfo blogs={blogs} user={user} />
+                                </Route>
+                                <Route path='/'>
+                                    <BlogList blogs={blogs} user={user} />
+                                </Route>
+                            </Switch>
+                        </div>
                     </Fragment> : <LoginForm />
             }
         </div>

@@ -1,0 +1,30 @@
+.user-info {
+    text-align: center;
+}
+
+.user-info {
+    width: 100%;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.user-info table {
+    margin: auto;
+    padding: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    width: 30%;
+    border: whitesmoke 1px solid;
+    border-radius: 15px;
+}
+
+.user-info td {
+    padding: 8px;
+}
+
+.user-info tr:nth-child(even) {
+    background-color: teal;
+}
+
+.user-info tr:hover {
+    background-color: #ddd;
+}

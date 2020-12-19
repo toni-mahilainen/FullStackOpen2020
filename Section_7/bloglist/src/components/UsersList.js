@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './UsersList.css'
 
 const UsersList = ({users}) => {
     const tbody = users ? users
@@ -11,13 +12,13 @@ const UsersList = ({users}) => {
         ) : 'Loading...'
 
     return (
-        <div>
+        <div className='users'>
             <h2>Users</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Blogs created</th>
+                        <th className='name-th'>Name</th>
+                        <th className='blogs-created-th'>Blogs created</th>
                     </tr>
                 </thead>
                 <tbody>
