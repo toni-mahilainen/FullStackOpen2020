@@ -1,0 +1,11 @@
+.logged-in-notification {
+    margin-right: 1em;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#logoutBtn {
+    position: absolute;
+    right: 0;
+}

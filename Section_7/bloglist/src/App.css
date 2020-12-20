@@ -1,0 +1,53 @@
+body {
+    margin: 0;
+}
+
+.app {
+    height: 100vh;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 0;
+    padding-top: 1em;
+}
+
+a {
+    color: white;
+}
+
+button {
+    margin: 5px 0;
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+input {
+    margin: 5px 0;
+    padding: 5px;
+    color: white;
+    background-color: rgba(245, 245, 245, .2);
+    border-radius: 5px;
+    border: whitesmoke 1px solid;
+}
+
+::placeholder {
+    color: white;
+}
+
+button:hover {
+    color: teal;
+}
+
+.blogInfoList {
+    line-height: 1.5rem;
+}
+
+.wrapper {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-around;
+}
