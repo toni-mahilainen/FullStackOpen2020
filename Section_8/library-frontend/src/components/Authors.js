@@ -1,7 +1,7 @@
 import React from 'react'
 import EditAuthorForm from './EditAuthorForm'
 
-const Authors = ({ show, authors }) => {
+const Authors = ({ show, authors, loggedIn }) => {
     if (!show) {
         return null
     }
@@ -29,7 +29,7 @@ const Authors = ({ show, authors }) => {
                     )}
                 </tbody>
             </table>
-            <EditAuthorForm authors={authors}/>
+            {loggedIn ? <EditAuthorForm authors={authors} /> : null}
         </div>
     )
 }
