@@ -1,23 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
 
 const Books = ({ show, books }) => {
-    console.log('books', books);
+    const [getFiltered, result] = useLazyQuery(ALL_BOOKS)
+    const uniqueGenres = [...new Set(books.map(book => book.genres).flat())]
+
+    if (result.data) {
+        console.log('result', result.data.allBooks);
+        books = result.data.allBooks
+    }
+
     if (!show) {
         return null
     }
 
-    const array = books.map(book => {
-        console.log('1', book.genres.map(genre => console.log('2', genre)));
-    })
+    const filterBooks = (e) => {
+        getFiltered({ variables: { genre: e.target.value } })
+    }
 
     return (
         <div>
             <h2>Books</h2>
 
             <h3>Filter by genre</h3>
-            <select>
+            <select onChange={filterBooks}>
                 {
-                    <option value={books.genres}></option>
+                    uniqueGenres.map(genre => <option defaultValue='select' value={genre}>{genre}</option>)
                 }
             </select>
 
