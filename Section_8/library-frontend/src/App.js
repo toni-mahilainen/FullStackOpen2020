@@ -12,13 +12,12 @@ const App = () => {
     const [page, setPage] = useState('authors')
     const resultUser = useQuery(USER)
     const resultAuthors = useQuery(ALL_AUTHORS)
-    const [getBooks, resultBooks] = useLazyQuery(ALL_BOOKS)
+    const resultBooks = useQuery(ALL_BOOKS)
     const client = useApolloClient()
 
     useEffect(() => {
         setToken(localStorage.getItem('library-user-token'))
-        getBooks({ variables: { genre: 'all' } })
-    }, [getBooks])
+    }, [])
 
     if (resultAuthors.loading) {
         return <div>loading...</div>
@@ -30,6 +29,7 @@ const App = () => {
 
     const logout = () => {
         setToken(null)
+        setPage('authors')
         localStorage.clear()
         client.resetStore()
     }

@@ -4,8 +4,8 @@ import { ALL_BOOKS } from '../queries'
 
 const Books = ({ show, allBooks }) => {
     const [books, setBooks] = useState(allBooks);
-    const genres = ['all']
-    const allgenres = genres.concat([...new Set(allBooks.map(book => book.genres).flat())])
+    const initialGenres = ['all']
+    const allgenres = initialGenres.concat([...new Set(allBooks.map(book => book.genres).flat())])
     const [getFiltered, result] = useLazyQuery(ALL_BOOKS)
 
     useEffect(() => {
@@ -19,7 +19,7 @@ const Books = ({ show, allBooks }) => {
     }
 
     const filterBooks = (e) => {
-        getFiltered({ variables: { genre: e.target.value } })
+        e.target.value === 'all' ? getFiltered() : getFiltered({ variables: { genre: e.target.value } })
     }
 
     return (
