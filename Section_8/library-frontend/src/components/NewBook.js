@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS, CREATE_BOOK } from '../queries'
+import { ALL_BOOKS, CREATE_BOOK } from '../queries'
 
 const NewBook = ({ show }) => {
     const [title, setTitle] = useState('')
@@ -20,7 +20,18 @@ const NewBook = ({ show }) => {
                     allBooks: [...dataInStoreAll.allBooks, response.data.addBook]
                 }
             })
-            response.data.addBook.genres.map(genre => {
+            // response.data.addBook.genres.forEach(genre => {
+            //     const dataInStoreVar = store.readQuery({ query: ALL_BOOKS, variables: { genre: genre } })
+            //     store.writeQuery({
+            //         query: ALL_BOOKS,
+            //         variables: { genre: genre },
+            //         data: {
+            //             ...dataInStoreVar,
+            //             allBooks: [...dataInStoreVar.allBooks, response.data.addBook]
+            //         }
+            //     })
+            // })
+            response.data.addBook.genres.map((genre) => {
                 const dataInStoreVar = store.readQuery({ query: ALL_BOOKS, variables: { genre: genre } })
                 store.writeQuery({
                     query: ALL_BOOKS,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { useQuery, useApolloClient, useLazyQuery } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
-import { ALL_AUTHORS, ALL_BOOKS, USER } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, USER, BOOK_ADDED } from './queries'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
 
@@ -15,9 +15,37 @@ const App = () => {
     const resultBooks = useQuery(ALL_BOOKS)
     const client = useApolloClient()
 
+    const updateCacheWith = (addedBook) => {
+        const includedIn = (set, object) =>
+            set.map(p => p.id).includes(object.id)
+
+        const dataInStore = client.readQuery({ query: ALL_BOOKS })
+        if (!includedIn(dataInStore.allBooks, addedBook)) {
+            client.writeQuery({
+                query: ALL_BOOKS,
+                data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+            })
+        }
+    }
+
+    useSubscription(BOOK_ADDED, {
+        onSubscriptionData: ({ subscriptionData }) => {
+            const addedBook = subscriptionData.data.bookAdded
+            alert(`New book added. Title: ${addedBook.title}`)
+            updateCacheWith(addedBook)
+        }
+    })
+
     useEffect(() => {
         setToken(localStorage.getItem('library-user-token'))
     }, [])
+
+    const logout = () => {
+        setToken(null)
+        setPage('authors')
+        localStorage.clear()
+        client.resetStore()
+    }
 
     if (resultAuthors.loading) {
         return <div>loading...</div>
@@ -25,13 +53,6 @@ const App = () => {
 
     if (resultBooks.loading) {
         return <div>loading...</div>
-    }
-
-    const logout = () => {
-        setToken(null)
-        setPage('authors')
-        localStorage.clear()
-        client.resetStore()
     }
 
     return (
@@ -56,7 +77,7 @@ const App = () => {
             <Authors show={page === 'authors'} authors={resultAuthors.data.allAuthors} loggedIn={token} />
             <Books show={page === 'books'} allBooks={resultBooks.data.allBooks} />
             <LoginForm setToken={setToken} setPage={setPage} show={page === 'login'} />
-            <NewBook show={page === 'add'} />
+            <NewBook show={page === 'add'} updateCacheWith={updateCacheWith} />
             <Recommendations show={page === 'recommendations'} allBooks={resultBooks.data.allBooks} user={resultUser.data.me} />
         </div>
     )

@@ -12,7 +12,7 @@ const Recommendations = ({ show, user }) => {
             getFiltered({ variables: { genre: user.favoriteGenre } })
             setFavoriteGenre(user.favoriteGenre)
         }
-    }, [getFiltered]);
+    }, [getFiltered, user]);
 
     if (!show) {
         return null
