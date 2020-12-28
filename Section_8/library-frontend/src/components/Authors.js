@@ -8,7 +8,7 @@ const Authors = ({ show, authors, loggedIn }) => {
 
     return (
         <div>
-            <h2>authors</h2>
+            <h2>Authors</h2>
             <table>
                 <tbody>
                     <tr>
@@ -24,7 +24,7 @@ const Authors = ({ show, authors, loggedIn }) => {
                         <tr key={a.name}>
                             <td>{a.name}</td>
                             <td>{a.born}</td>
-                            <td>{a.bookCount}</td>
+                            <td>{a.books.length}</td>
                         </tr>
                     )}
                 </tbody>

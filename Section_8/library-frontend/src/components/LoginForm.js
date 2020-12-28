@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMutation, setError } from '@apollo/client'
+import { useMutation } from '@apollo/client'
 import { LOGIN } from '../queries'
 
 const LoginForm = ({ setToken, setPage, show }) => {
@@ -8,7 +8,7 @@ const LoginForm = ({ setToken, setPage, show }) => {
 
     const [login, result] = useMutation(LOGIN, {
         onError: (error) => {
-            setError(error.graphQLErrors[0].message)
+            alert(error.graphQLErrors[0].message)
         }
     })
 

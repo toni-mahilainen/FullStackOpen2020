@@ -19,11 +19,39 @@ const App = () => {
         const includedIn = (set, object) =>
             set.map(b => b.id).includes(object.id)
 
-        const dataInStore = client.readQuery({ query: ALL_BOOKS })
-        if (!includedIn(dataInStore.allBooks, addedBook)) {
+        const dataBooks = client.readQuery({ query: ALL_BOOKS })
+        const dataAuthors = client.readQuery({ query: ALL_AUTHORS })
+        const authorToUpdate = dataAuthors.allAuthors.find(a => a.name === addedBook.author.name)
+        const updatedAuthorObj = {
+            ...authorToUpdate,
+            books: [
+                ...authorToUpdate.books,
+                { __typename: 'Book', title: addedBook.title }
+            ]
+        }
+        const updatedAuthors = dataAuthors.allAuthors.map(obj => obj === authorToUpdate ? updatedAuthorObj : obj)
+
+        if (!includedIn(dataBooks.allBooks, addedBook)) {
             client.writeQuery({
                 query: ALL_BOOKS,
-                data: { allBooks: dataInStore.allBooks.concat(addedBook) }
+                data: { allBooks: dataBooks.allBooks.concat(addedBook) }
+            })
+
+            client.writeQuery({
+                query: ALL_AUTHORS,
+                data: { allAuthors: updatedAuthors }
+            })
+
+            addedBook.genres.forEach(genre => {
+                const dataBooksFiltered = dataBooks.allBooks.filter(book => book.genres.includes(genre))
+                client.writeQuery({
+                    query: ALL_BOOKS,
+                    variables: { genre },
+                    data: {
+                        ...dataBooksFiltered,
+                        allBooks: [...dataBooksFiltered, addedBook]
+                    }
+                })
             })
         }
     }
