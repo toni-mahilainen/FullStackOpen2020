@@ -29,11 +29,10 @@ const calculateBmi = (height: number, weight: number): string => {
         default:
             throw new Error("Check your parameters")
     }
-
 }
 
 try {
-    console.log(calculateBmi(176.5, 20));
+    console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])));
 } catch (error) {
     console.log(`Some errors! Message: ${error.message}`);
 }
