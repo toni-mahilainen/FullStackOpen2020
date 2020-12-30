@@ -8,12 +8,9 @@ interface Results {
     average: number
 }
 
-const calculateExercise = (args: string[]): Results => {
-    if (args.length < 4) throw new Error('Not enough arguments')
+export const calculateExercise = (hours: string[], target: number): Results => {
+    if (hours.length < 4) throw new Error('Not enough arguments');
     
-    const hours = args.slice(2, args.length - 1);
-    const target = Number(args.pop());
-
     let ratingDescription = '';
     let rating = 0;
     
@@ -49,7 +46,7 @@ const calculateExercise = (args: string[]): Results => {
             break;
 
         default:
-            throw new Error('Something bad happened!')
+            throw new Error('Something bad happened!');
     }
 
     return {
@@ -60,11 +57,5 @@ const calculateExercise = (args: string[]): Results => {
         ratingDescription,
         target,
         average
-    }
-}
-
-try {
-    console.log(calculateExercise(process.argv));
-} catch (error) {
-    console.log(`Some errors! Message:\r\n${error.message}`);
-}
+    };
+};

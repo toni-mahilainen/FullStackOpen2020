@@ -1,6 +1,6 @@
-const calculateBmi = (height: number, weight: number): string => {
-    const heightInMeters = height / 100
-    const bmi = weight / Math.pow(heightInMeters, 2)
+export const calculateBmi = (height: number, weight: number): string => {
+    const heightInMeters = height / 100;
+    const bmi = weight / Math.pow(heightInMeters, 2);
     switch (true) {
         case bmi <= 15:
             return 'Very severely underweight';
@@ -27,12 +27,6 @@ const calculateBmi = (height: number, weight: number): string => {
             return 'Obese Class III (Very severely obese)	';
 
         default:
-            throw new Error("Check your parameters")
+            throw new Error("Check your parameters");
     }
-}
-
-try {
-    console.log(calculateBmi(Number(process.argv[2]), Number(process.argv[3])));
-} catch (error) {
-    console.log(`Some errors! Message: ${error.message}`);
-}
+};
