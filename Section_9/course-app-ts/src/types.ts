@@ -21,9 +21,14 @@ interface CoursePartThree extends CoursePartWithDescription {
     exerciseSubmissionLink: string;
 }
 
-export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree;
+interface CoursePartFour extends CoursePartWithDescription {
+    name: "Styling with styled components";
+    numberOfStudents: number;
+}
 
-export interface HeaderProps {  
+export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
+
+export interface HeaderProps {
     courseName: string
 }
 

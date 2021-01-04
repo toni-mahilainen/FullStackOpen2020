@@ -24,6 +24,12 @@ const App: React.FC = () => {
             exerciseCount: 14,
             description: "Confusing description",
             exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev"
+        },
+        {
+            name: "Styling with styled components",
+            exerciseCount: 20,
+            description: "New style for everybody",
+            numberOfStudents: 15
         }
     ];
 
