@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { useStateValue } from "../state";
-import { Header, Container, Icon, List, Label } from "semantic-ui-react";
+import { Header, Container, List, Label } from "semantic-ui-react";
 import axios from 'axios';
-import { Patient } from '../types';
 
 import { apiBaseUrl } from "../constants";
 import GenderIcon from './GenderIcon';
+import { useStateValue, findPatient } from "../state";
+import { Patient } from '../types';
 
 const PatientInfoPage: React.FC = () => {
     const [{ patient }, dispatch] = useStateValue();
@@ -18,7 +18,7 @@ const PatientInfoPage: React.FC = () => {
             try {
                 const response = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
 
-                dispatch({ type: 'FIND_PATIENT', payload: { patient: response.data } });
+                dispatch(findPatient(response.data));
             } catch (error) {
                 console.error(error);
             }
