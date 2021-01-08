@@ -23,7 +23,10 @@ const PatientInfoPage: React.FC = () => {
                 console.error(error);
             }
         };
-        fetchPatient();
+
+        if (patient?.id !== id) {
+            fetchPatient();
+        }
     }, [id]);
 
     return (
