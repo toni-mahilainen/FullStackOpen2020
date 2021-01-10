@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Label, List } from 'semantic-ui-react';
 import { Diagnosis, Entry } from '../types';
+import EntryDetails from './EntryDetails';
 
 interface Props {
     entriesData: Entry[];
@@ -20,13 +21,7 @@ const Entries: React.FC<Props> = ({ entriesData, diagnoses }) => {
         });
 
         return (
-            <Container key={entry.id} >
-                <Label color='pink'>{entry.date}</Label>{' '}
-                <span>{entry.description}</span>
-                <List bulleted verticalAlign='middle'>
-                    {diagnosisCodes}
-                </List>
-            </Container>
+            <EntryDetails key={entry.id} entry={entry} diagnosisCodes={diagnosisCodes} />
         );
     });
 

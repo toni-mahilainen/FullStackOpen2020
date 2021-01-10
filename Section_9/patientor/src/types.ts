@@ -44,6 +44,8 @@ interface HealthCheckEntry extends BaseEntry {
     healthCheckRating: HealthCheckRating;
 }
 
+export type HealthIconColor = "black" | "red" | "orange" | "yellow" | "olive" | "green" | "teal" | "blue" | "violet" | "purple" | "pink" | "brown" | "grey" | undefined;
+
 export interface Diagnosis {
     code: string;
     name: string;

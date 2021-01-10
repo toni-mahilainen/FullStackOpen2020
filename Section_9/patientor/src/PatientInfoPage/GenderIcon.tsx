@@ -19,6 +19,6 @@ const GenderIcon: React.FC<Props> = ({ gender }) => {
         default:
             return null;
     }
-}
+};
 
 export default GenderIcon;
