@@ -11,6 +11,7 @@ import Entries from './Entries';
 
 const PatientInfoPage: React.FC = () => {
     const [{ patient }, dispatch] = useStateValue();
+    const [{ diagnoses }] = useStateValue();
 
     const { id } = useParams<{ id: string }>();
 
@@ -52,7 +53,7 @@ const PatientInfoPage: React.FC = () => {
                             </List.Item>
                         </List>
                         <Header as='h3'>Entries</Header>
-                        <Entries entriesData={patient.entries} />
+                        <Entries entriesData={patient.entries} diagnoses={diagnoses} />
                     </Container >
                     : null
             }

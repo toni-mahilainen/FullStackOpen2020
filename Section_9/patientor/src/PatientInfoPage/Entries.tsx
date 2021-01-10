@@ -1,23 +1,26 @@
 import React from 'react';
 import { Container, Label, List } from 'semantic-ui-react';
-import { Entry } from '../types';
+import { Diagnosis, Entry } from '../types';
 
 interface Props {
     entriesData: Entry[];
+    diagnoses: { [id: string]: Diagnosis };
 }
 
-const Entries: React.FC<Props> = ({ entriesData }) => {
+const Entries: React.FC<Props> = ({ entriesData, diagnoses }) => {
     const entries = entriesData.map(entry => {
-        const diagnosisCodes =
-            entry.diagnosisCodes ?
-                entry.diagnosisCodes.map(code =>
-                    <List.Item key={code}>
-                        <Label color='green' size='mini'>{code}</Label>
-                    </List.Item>
-                ) : null;
+        const diagnosisCodes = entry.diagnosisCodes?.map(code => {
+            const diagnosis = Object.values(diagnoses).find(diagnosis => diagnosis.code === code);
+            return (
+                <List.Item key={code}>
+                    <Label color='green' size='mini'>{code}</Label>{' '}
+                    <span>{diagnosis?.name}</span>
+                </List.Item>
+            );
+        });
 
         return (
-            <Container Container key={entry.id} >
+            <Container key={entry.id} >
                 <Label color='pink'>{entry.date}</Label>{' '}
                 <span>{entry.description}</span>
                 <List bulleted verticalAlign='middle'>
@@ -32,6 +35,6 @@ const Entries: React.FC<Props> = ({ entriesData }) => {
             {entries}
         </Container>
     );
-}
+};
 
 export default Entries;
