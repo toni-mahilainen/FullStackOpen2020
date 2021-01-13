@@ -5,21 +5,44 @@ import { Link } from "react-router-dom";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
-import { Patient } from "../types";
+import { Gender, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue, addPatient } from "../state";
+import AddEntryModal from "../AddEntryModal";
+
+const initialPatient = {
+    id: "",
+    name: "",
+    occupation: "",
+    gender: Gender.Male,
+    ssn: "",
+    dateOfBirth: "",
+    entries: []
+};
 
 const PatientListPage: React.FC = () => {
     const [{ patients }, dispatch] = useStateValue();
 
-    const [modalOpen, setModalOpen] = React.useState<boolean>(false);
+    const [newPatientModalOpen, setNewPatientModalOpen] = React.useState<boolean>(false);
+    const [newEntryModalOpen, setNewEntryModalOpen] = React.useState<boolean>(false);
+    const [patient, setPatient] = React.useState<Patient>(initialPatient);
     const [error, setError] = React.useState<string | undefined>();
 
-    const openModal = (): void => setModalOpen(true);
+    const openNewPatientModal = (): void => setNewPatientModalOpen(true);
 
-    const closeModal = (): void => {
-        setModalOpen(false);
+    const openNewEntryModal = (patient: Patient): void => {
+        setPatient(patient);
+        setNewEntryModalOpen(true);
+    };
+
+    const closeNewPatientModal = (): void => {
+        setNewPatientModalOpen(false);
+        setError(undefined);
+    };
+
+    const closeNewEntryModal = (): void => {
+        setNewEntryModalOpen(false);
         setError(undefined);
     };
 
@@ -30,7 +53,16 @@ const PatientListPage: React.FC = () => {
                 values
             );
             dispatch(addPatient(newPatient));
-            closeModal();
+            closeNewPatientModal();
+        } catch (e) {
+            console.error(e.response.data);
+            setError(e.response.data.error);
+        }
+    };
+
+    const submitNewEntry = () => {
+        try {
+            alert('New entry');
         } catch (e) {
             console.error(e.response.data);
             setError(e.response.data.error);
@@ -49,6 +81,7 @@ const PatientListPage: React.FC = () => {
                         <Table.HeaderCell>Gender</Table.HeaderCell>
                         <Table.HeaderCell>Occupation</Table.HeaderCell>
                         <Table.HeaderCell>Health Rating</Table.HeaderCell>
+                        <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -62,17 +95,27 @@ const PatientListPage: React.FC = () => {
                             <Table.Cell>
                                 <HealthRatingBar showText={false} rating={1} />
                             </Table.Cell>
+                            <Table.Cell>
+                                <Button onClick={() => openNewEntryModal(patient)}>Add entries</Button>
+                            </Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>
             </Table>
             <AddPatientModal
-                modalOpen={modalOpen}
+                modalOpen={newPatientModalOpen}
                 onSubmit={submitNewPatient}
                 error={error}
-                onClose={closeModal}
+                onClose={closeNewPatientModal}
             />
-            <Button onClick={() => openModal()}>Add New Patient</Button>
+            <AddEntryModal
+                patient={patient}
+                modalOpen={newEntryModalOpen}
+                onSubmit={submitNewEntry}
+                error={error}
+                onClose={closeNewEntryModal}
+            />
+            <Button onClick={() => openNewPatientModal()}>Add New Patient</Button>
         </div>
     );
 };
