@@ -2,8 +2,9 @@ import React from 'react';
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField, SelectField, GenderOption } from "../AddPatientModal/FormField";
+import { TextField, DiagnosisSelection } from "../AddPatientModal/FormField";
 import { HospitalEntry } from '../types';
+import { useStateValue } from "../state";
 
 export type EntryFormValues = Omit<HospitalEntry, "id">;
 
@@ -13,6 +14,7 @@ interface Props {
 }
 
 const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+    const [{ diagnoses }] = useStateValue();
     return (
         <Formik
             initialValues={{
@@ -45,7 +47,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 return errors;
             }}
         >
-            {({ isValid, dirty }) => {
+            {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
                 return (
                     <Form className="form ui">
                         <Field
@@ -72,17 +74,10 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                             name="description"
                             component={TextField}
                         />
-                        <Field
-                            label="Diagnosis codes"
-                            placeholder="Diagnosis codes"
-                            name="diagnosisCodes"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Diagnosis codes"
-                            placeholder="Diagnosis codes"
-                            name="diagnosisCodes"
-                            component={TextField}
+                        <DiagnosisSelection
+                            setFieldValue={setFieldValue}
+                            setFieldTouched={setFieldTouched}
+                            diagnoses={Object.values(diagnoses)}
                         />
                         <Field
                             label="Discharge date"

@@ -20,6 +20,8 @@ const App: React.FC = () => {
                 const { data: patientListFromApi } = await axios.get<Patient[]>(
                     `${apiBaseUrl}/patients`
                 );
+                console.log('patientListFromApi', patientListFromApi);
+                
                 dispatch(setPatientList(patientListFromApi));
             } catch (e) {
                 console.error(e);

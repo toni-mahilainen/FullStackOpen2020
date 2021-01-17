@@ -5,34 +5,25 @@ import { Link } from "react-router-dom";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
-import { Gender, Patient } from "../types";
+import { Entry, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
-import { useStateValue, addPatient } from "../state";
+import { useStateValue, addPatient, findPatient, addEntry, resetPatient } from "../state";
 import AddEntryModal from "../AddEntryModal";
-
-const initialPatient = {
-    id: "",
-    name: "",
-    occupation: "",
-    gender: Gender.Male,
-    ssn: "",
-    dateOfBirth: "",
-    entries: []
-};
+import { EntryFormValues } from "../AddEntryModal/AddEntryForm";
 
 const PatientListPage: React.FC = () => {
     const [{ patients }, dispatch] = useStateValue();
+    const [{ patient }] = useStateValue();
 
     const [newPatientModalOpen, setNewPatientModalOpen] = React.useState<boolean>(false);
     const [newEntryModalOpen, setNewEntryModalOpen] = React.useState<boolean>(false);
-    const [patient, setPatient] = React.useState<Patient>(initialPatient);
     const [error, setError] = React.useState<string | undefined>();
 
     const openNewPatientModal = (): void => setNewPatientModalOpen(true);
 
     const openNewEntryModal = (patient: Patient): void => {
-        setPatient(patient);
+        dispatch(findPatient(patient));
         setNewEntryModalOpen(true);
     };
 
@@ -60,9 +51,15 @@ const PatientListPage: React.FC = () => {
         }
     };
 
-    const submitNewEntry = () => {
+    const submitNewEntry = async (values: EntryFormValues) => {
         try {
-            alert('New entry');
+            const { data: newEntry } = await axios.post<Entry>(
+                `${apiBaseUrl}/patients/${patient?.id}/entries`,
+                values
+            );
+            dispatch(addEntry(patient?.id, newEntry));
+            closeNewEntryModal();
+            dispatch(resetPatient());
         } catch (e) {
             console.error(e.response.data);
             setError(e.response.data.error);
@@ -109,7 +106,6 @@ const PatientListPage: React.FC = () => {
                 onClose={closeNewPatientModal}
             />
             <AddEntryModal
-                patient={patient}
                 modalOpen={newEntryModalOpen}
                 onSubmit={submitNewEntry}
                 error={error}
