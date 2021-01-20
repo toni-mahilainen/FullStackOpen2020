@@ -31,18 +31,40 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
             onSubmit={onSubmit}
             validate={values => {
                 const requiredError = "Field is required";
-                const errors: { [field: string]: string } = {};
+                const invalidDateError = "Invalid date format";
+                const dateRegex = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i;
+                const errors = {
+                    type: '',
+                    date: '',
+                    description: '',
+                    specialist: '',
+                    discharge: {
+                        date: '',
+                        criteria: ''
+                    }
+                };
+                
                 if (!values.type) {
-                    errors.name = requiredError;
+                    errors.type = requiredError;
                 }
                 if (!values.date) {
-                    errors.ssn = requiredError;
+                    errors.date = requiredError;
+                } else if (!dateRegex.test(values.date)) {
+                    errors.date = invalidDateError;
                 }
                 if (!values.description) {
-                    errors.dateOfBirth = requiredError;
+                    errors.description = requiredError;
                 }
                 if (!values.specialist) {
-                    errors.occupation = requiredError;
+                    errors.specialist = requiredError;
+                }
+                if (!values.discharge.date) {
+                    errors.discharge.date = requiredError;
+                } else if (!dateRegex.test(values.discharge.date)) {
+                    errors.discharge.date = invalidDateError;
+                }
+                if (!values.discharge.criteria) {
+                    errors.discharge.criteria = requiredError;
                 }
                 return errors;
             }}
