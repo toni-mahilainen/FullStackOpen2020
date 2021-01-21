@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Grid, Button } from "semantic-ui-react";
 import { Field, Formik, Form } from "formik";
 
-import { TextField, DiagnosisSelection } from "../AddPatientModal/FormField";
-import { HospitalEntry } from '../types';
+import { TextField, DiagnosisSelection, SelectField, TypeOption } from "../AddPatientModal/FormField";
+import { HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, Type } from '../types';
 import { useStateValue } from "../state";
+import { HealthCheckInputs, HospitalInputs, OccupationalInputs } from './ChangingInputs';
 
-export type EntryFormValues = Omit<HospitalEntry, "id">;
+export type HospitalEntryFormValues = Omit<HospitalEntry, "id">;
+export type OccupationalEntryFormValues = Omit<OccupationalHealthcareEntry, "id">;
+export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
 
 interface Props {
-    onSubmit: (values: EntryFormValues) => void;
+    onSubmit: (values: HospitalEntryFormValues | OccupationalEntryFormValues | HealthCheckEntryFormValues) => void;
     onCancel: () => void;
 }
+
+const typeOptions: TypeOption[] = [
+    { value: Type.Hospital, label: 'Hospital' },
+    { value: Type.OccupationalHealthcare, label: 'Occupational Healthcare' },
+    { value: Type.HealthCheck, label: 'Health Check' }
+];
 
 const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
     const [{ diagnoses }] = useStateValue();
@@ -43,7 +52,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                         criteria: ''
                     }
                 };
-                
+
                 if (!values.type) {
                     errors.type = requiredError;
                 }
@@ -58,25 +67,43 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 if (!values.specialist) {
                     errors.specialist = requiredError;
                 }
-                if (!values.discharge.date) {
-                    errors.discharge.date = requiredError;
-                } else if (!dateRegex.test(values.discharge.date)) {
-                    errors.discharge.date = invalidDateError;
-                }
-                if (!values.discharge.criteria) {
-                    errors.discharge.criteria = requiredError;
-                }
+                // if (!values.discharge.date) {
+                //     errors.discharge.date = requiredError;
+                // } else if (!dateRegex.test(values.discharge.date)) {
+                //     errors.discharge.date = invalidDateError;
+                // }
+                // if (!values.discharge.criteria) {
+                //     errors.discharge.criteria = requiredError;
+                // }
                 return errors;
             }}
         >
-            {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
+                let changingInputs: JSX.Element = <></>;
+                
+                switch (values.type) {
+                    case 'Hospital':
+                        changingInputs = <HospitalInputs />;
+                        break;
+
+                    case 'OccupationalHealthcare':
+                        changingInputs = <OccupationalInputs />;
+                        break;
+
+                    case 'HealthCheck':
+                        changingInputs = <HealthCheckInputs />;
+                        break;
+
+                    default:
+                        return null;
+                }
+
                 return (
                     <Form className="form ui">
-                        <Field
+                        <SelectField
                             label="Type"
-                            placeholder="Type"
                             name="type"
-                            component={TextField}
+                            options={typeOptions}
                         />
                         <Field
                             label="Date"
@@ -101,18 +128,7 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                             setFieldTouched={setFieldTouched}
                             diagnoses={Object.values(diagnoses)}
                         />
-                        <Field
-                            label="Discharge date"
-                            placeholder="Discharge date"
-                            name="discharge.date"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Discharge criteria"
-                            placeholder="Discharge criteria"
-                            name="discharge.criteria"
-                            component={TextField}
-                        />
+                        {changingInputs}
                         <Grid>
                             <Grid.Column floated="left" width={5}>
                                 <Button type="button" onClick={onCancel} color="red">
