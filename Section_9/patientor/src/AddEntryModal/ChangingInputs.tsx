@@ -22,15 +22,21 @@ export const HospitalInputs: React.FC = (): JSX.Element => (
 export const OccupationalInputs: React.FC = (): JSX.Element => (
     <>
         <Field
+            label="Employer name"
+            placeholder="Employer name"
+            name="employerName"
+            component={TextField}
+        />
+        <Field
             label="Sickleave - Start date"
             placeholder="Start date"
-            name="sickleave.startDate"
+            name="sickLeave.startDate"
             component={TextField}
         />
         <Field
             label="Sickleave - End date"
             placeholder="End date"
-            name="sickleave.endDate"
+            name="sickLeave.endDate"
             component={TextField}
         />
     </>

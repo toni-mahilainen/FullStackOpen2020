@@ -20,7 +20,7 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
             date: "",
             criteria: ""
         }
-    };
+    } as HospitalEntryFormValues;
 
     let validate: (values: EntryFormValues) => object = () => {
         const errors = {
@@ -35,30 +35,6 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
         };
         return errors;
     };
-    // const [initialValues, setInitialValues] = useState<EntryFormValues>({
-    //     type: Type.Hospital,
-    //     date: "",
-    //     description: "",
-    //     specialist: "",
-    //     diagnosisCodes: [],
-    //     discharge: {
-    //         date: "",
-    //         criteria: ""
-    //     }
-    // });
-    // const [validate, setValidate] = useState<(values: EntryFormValues) => object>(() => {
-    //     const errors = {
-    //         type: '',
-    //         date: '',
-    //         description: '',
-    //         specialist: '',
-    //         discharge: {
-    //             date: '',
-    //             criteria: ''
-    //         }
-    //     };
-    //     return errors;
-    // });
 
     switch (type) {
         case Type.Hospital:
@@ -90,9 +66,6 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                     }
                 };
 
-                if (!hospitalEntryValues.type) {
-                    errors.type = requiredError;
-                }
                 if (!hospitalEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(values.date)) {
@@ -148,9 +121,6 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                     }
                 };
 
-                if (!occupationalHealthcareEntryValues.type) {
-                    errors.type = requiredError;
-                }
                 if (!occupationalHealthcareEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(occupationalHealthcareEntryValues.date)) {
@@ -161,6 +131,9 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                 }
                 if (!occupationalHealthcareEntryValues.specialist) {
                     errors.specialist = requiredError;
+                }
+                if (!occupationalHealthcareEntryValues.employerName) {
+                    errors.employerName = requiredError;
                 }
                 if (!occupationalHealthcareEntryValues.sickLeave.startDate) {
                     errors.sickLeave.startDate = requiredError;
@@ -200,9 +173,6 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                     healthCheckRating: ''
                 };
 
-                if (!healthCheckEntryValues.type) {
-                    errors.type = requiredError;
-                }
                 if (!healthCheckEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(healthCheckEntryValues.date)) {

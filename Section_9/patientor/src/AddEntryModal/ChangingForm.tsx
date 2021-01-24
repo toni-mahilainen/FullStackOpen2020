@@ -17,15 +17,15 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
     const [{ diagnoses }] = useStateValue();
     return (
         <Formik
+            enableReinitialize
             initialValues={initialValues}
             onSubmit={onSubmit}
             validate={validate}
         >
-            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
+            {({ isValid, values, setFieldValue, setFieldTouched }) => {
                 let changingInputs: JSX.Element = <></>;
-                console.log('values', values);
 
-                switch (values.type) {
+                switch (initialValues.type) {
                     case Type.Hospital:
                         changingInputs = <HospitalInputs />;
                         break;
@@ -44,6 +44,13 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
 
                 return (
                     <Form className="form ui">
+                        <Field
+                            label="Type"
+                            placeholder="Type"
+                            name="type"
+                            value={values.type}
+                            component={TextField}
+                        />
                         <Field
                             label="Date"
                             placeholder="Date"
@@ -79,7 +86,6 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
                                     type="submit"
                                     floated="right"
                                     color="green"
-                                    disabled={!dirty || !isValid}
                                 >
                                     Add
                                 </Button>

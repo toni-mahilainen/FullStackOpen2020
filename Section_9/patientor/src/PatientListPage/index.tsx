@@ -5,12 +5,11 @@ import { Link } from "react-router-dom";
 
 import { PatientFormValues } from "../AddPatientModal/AddPatientForm";
 import AddPatientModal from "../AddPatientModal";
-import { Entry, Patient } from "../types";
+import { Entry, EntryFormValues, Patient } from "../types";
 import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue, addPatient, findPatient, addEntry, resetPatient } from "../state";
 import AddEntryModal from "../AddEntryModal";
-import { HospitalEntryFormValues, OccupationalEntryFormValues, HealthCheckEntryFormValues } from "../types";
 
 const PatientListPage: React.FC = () => {
     const [{ patients }, dispatch] = useStateValue();
@@ -51,8 +50,10 @@ const PatientListPage: React.FC = () => {
         }
     };
 
-    const submitNewEntry = async (values: HospitalEntryFormValues | OccupationalEntryFormValues | HealthCheckEntryFormValues) => {
+    const submitNewEntry = async (values: EntryFormValues) => {
+        console.log('values', values);
         try {
+            
             const { data: newEntry } = await axios.post<Entry>(
                 `${apiBaseUrl}/patients/${patient?.id}/entries`,
                 values

@@ -9,6 +9,7 @@ interface Props {
 }
 
 const Entries: React.FC<Props> = ({ entriesData, diagnoses }) => {
+    console.log('entriesData', entriesData);
     const entries = entriesData.map(entry => {
         const diagnosisCodes = entry.diagnosisCodes?.map(code => {
             const diagnosis = Object.values(diagnoses).find(diagnosis => diagnosis.code === code);
