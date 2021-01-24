@@ -10,7 +10,7 @@ import { apiBaseUrl } from "../constants";
 import HealthRatingBar from "../components/HealthRatingBar";
 import { useStateValue, addPatient, findPatient, addEntry, resetPatient } from "../state";
 import AddEntryModal from "../AddEntryModal";
-import { HospitalEntryFormValues, OccupationalEntryFormValues, HealthCheckEntryFormValues } from "../AddEntryModal/AddEntryForm";
+import { HospitalEntryFormValues, OccupationalEntryFormValues, HealthCheckEntryFormValues } from "../types";
 
 const PatientListPage: React.FC = () => {
     const [{ patients }, dispatch] = useStateValue();

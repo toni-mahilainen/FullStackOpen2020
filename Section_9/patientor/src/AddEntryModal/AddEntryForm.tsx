@@ -1,33 +1,69 @@
-import React, { FC } from 'react';
-import { Grid, Button } from "semantic-ui-react";
-import { Field, Formik, Form } from "formik";
+import React from 'react';
 
-import { TextField, DiagnosisSelection, SelectField, TypeOption } from "../AddPatientModal/FormField";
-import { HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, Type } from '../types';
-import { useStateValue } from "../state";
-import { HealthCheckInputs, HospitalInputs, OccupationalInputs } from './ChangingInputs';
-
-export type HospitalEntryFormValues = Omit<HospitalEntry, "id">;
-export type OccupationalEntryFormValues = Omit<OccupationalHealthcareEntry, "id">;
-export type HealthCheckEntryFormValues = Omit<HealthCheckEntry, "id">;
+import { Type, EntryFormValues, HospitalEntryFormValues, OccupationalEntryFormValues, HealthCheckEntryFormValues, HealthCheckRating } from '../types';
+import ChangingForm from './ChangingForm';
 
 interface Props {
-    onSubmit: (values: HospitalEntryFormValues | OccupationalEntryFormValues | HealthCheckEntryFormValues) => void;
+    type: Type.Hospital | Type.OccupationalHealthcare | Type.HealthCheck;
+    onSubmit: (values: EntryFormValues) => void;
     onCancel: () => void;
 }
 
-const typeOptions: TypeOption[] = [
-    { value: Type.Hospital, label: 'Hospital' },
-    { value: Type.OccupationalHealthcare, label: 'Occupational Healthcare' },
-    { value: Type.HealthCheck, label: 'Health Check' }
-];
+const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
+    let initialValues: EntryFormValues = {
+        type: type,
+        date: "",
+        description: "",
+        specialist: "",
+        diagnosisCodes: [],
+        discharge: {
+            date: "",
+            criteria: ""
+        }
+    };
 
-const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
-    const [{ diagnoses }] = useStateValue();
-    return (
-        <Formik
-            initialValues={{
-                type: "Hospital",
+    let validate: (values: EntryFormValues) => object = () => {
+        const errors = {
+            type: '',
+            date: '',
+            description: '',
+            specialist: '',
+            discharge: {
+                date: '',
+                criteria: ''
+            }
+        };
+        return errors;
+    };
+    // const [initialValues, setInitialValues] = useState<EntryFormValues>({
+    //     type: Type.Hospital,
+    //     date: "",
+    //     description: "",
+    //     specialist: "",
+    //     diagnosisCodes: [],
+    //     discharge: {
+    //         date: "",
+    //         criteria: ""
+    //     }
+    // });
+    // const [validate, setValidate] = useState<(values: EntryFormValues) => object>(() => {
+    //     const errors = {
+    //         type: '',
+    //         date: '',
+    //         description: '',
+    //         specialist: '',
+    //         discharge: {
+    //             date: '',
+    //             criteria: ''
+    //         }
+    //     };
+    //     return errors;
+    // });
+
+    switch (type) {
+        case Type.Hospital:
+            initialValues = {
+                type: type,
                 date: "",
                 description: "",
                 specialist: "",
@@ -36,9 +72,10 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                     date: "",
                     criteria: ""
                 }
-            }}
-            onSubmit={onSubmit}
-            validate={values => {
+            };
+
+            validate = (values: EntryFormValues) => {
+                const hospitalEntryValues = values as HospitalEntryFormValues;
                 const requiredError = "Field is required";
                 const invalidDateError = "Invalid date format";
                 const dateRegex = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i;
@@ -53,104 +90,141 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                     }
                 };
 
-                if (!values.type) {
+                if (!hospitalEntryValues.type) {
                     errors.type = requiredError;
                 }
-                if (!values.date) {
+                if (!hospitalEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(values.date)) {
                     errors.date = invalidDateError;
                 }
-                if (!values.description) {
+                if (!hospitalEntryValues.description) {
                     errors.description = requiredError;
                 }
-                if (!values.specialist) {
+                if (!hospitalEntryValues.specialist) {
                     errors.specialist = requiredError;
                 }
-                // if (!values.discharge.date) {
-                //     errors.discharge.date = requiredError;
-                // } else if (!dateRegex.test(values.discharge.date)) {
-                //     errors.discharge.date = invalidDateError;
-                // }
-                // if (!values.discharge.criteria) {
-                //     errors.discharge.criteria = requiredError;
-                // }
-                return errors;
-            }}
-        >
-            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
-                let changingInputs: JSX.Element = <></>;
-                
-                switch (values.type) {
-                    case 'Hospital':
-                        changingInputs = <HospitalInputs />;
-                        break;
-
-                    case 'OccupationalHealthcare':
-                        changingInputs = <OccupationalInputs />;
-                        break;
-
-                    case 'HealthCheck':
-                        changingInputs = <HealthCheckInputs />;
-                        break;
-
-                    default:
-                        return null;
+                if (!hospitalEntryValues.discharge.date) {
+                    errors.discharge.date = requiredError;
+                } else if (!dateRegex.test(hospitalEntryValues.discharge.date)) {
+                    errors.discharge.date = invalidDateError;
                 }
+                if (!hospitalEntryValues.discharge.criteria) {
+                    errors.discharge.criteria = requiredError;
+                }
+                return errors;
+            };
 
-                return (
-                    <Form className="form ui">
-                        <SelectField
-                            label="Type"
-                            name="type"
-                            options={typeOptions}
-                        />
-                        <Field
-                            label="Date"
-                            placeholder="Date"
-                            name="date"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Specialist"
-                            placeholder="Specialist"
-                            name="specialist"
-                            component={TextField}
-                        />
-                        <Field
-                            label="Description"
-                            placeholder="Description"
-                            name="description"
-                            component={TextField}
-                        />
-                        <DiagnosisSelection
-                            setFieldValue={setFieldValue}
-                            setFieldTouched={setFieldTouched}
-                            diagnoses={Object.values(diagnoses)}
-                        />
-                        {changingInputs}
-                        <Grid>
-                            <Grid.Column floated="left" width={5}>
-                                <Button type="button" onClick={onCancel} color="red">
-                                    Cancel
-                                </Button>
-                            </Grid.Column>
-                            <Grid.Column floated="right" width={5}>
-                                <Button
-                                    type="submit"
-                                    floated="right"
-                                    color="green"
-                                    disabled={!dirty || !isValid}
-                                >
-                                    Add
-                                </Button>
-                            </Grid.Column>
-                        </Grid>
-                    </Form>
-                );
-            }}
-        </Formik>
-    );
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+
+        case Type.OccupationalHealthcare:
+            initialValues = {
+                type: type,
+                date: "",
+                description: "",
+                specialist: "",
+                diagnosisCodes: [],
+                employerName: '',
+                sickLeave: {
+                    startDate: "",
+                    endDate: ""
+                }
+            };
+
+            validate = (values: EntryFormValues) => {
+                const occupationalHealthcareEntryValues = values as OccupationalEntryFormValues;
+                const requiredError = "Field is required";
+                const invalidDateError = "Invalid date format";
+                const dateRegex = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i;
+                const errors = {
+                    type: '',
+                    date: '',
+                    description: '',
+                    specialist: '',
+                    employerName: '',
+                    sickLeave: {
+                        startDate: "",
+                        endDate: ""
+                    }
+                };
+
+                if (!occupationalHealthcareEntryValues.type) {
+                    errors.type = requiredError;
+                }
+                if (!occupationalHealthcareEntryValues.date) {
+                    errors.date = requiredError;
+                } else if (!dateRegex.test(occupationalHealthcareEntryValues.date)) {
+                    errors.date = invalidDateError;
+                }
+                if (!occupationalHealthcareEntryValues.description) {
+                    errors.description = requiredError;
+                }
+                if (!occupationalHealthcareEntryValues.specialist) {
+                    errors.specialist = requiredError;
+                }
+                if (!occupationalHealthcareEntryValues.sickLeave.startDate) {
+                    errors.sickLeave.startDate = requiredError;
+                } else if (!dateRegex.test(occupationalHealthcareEntryValues.sickLeave.startDate)) {
+                    errors.sickLeave.startDate = invalidDateError;
+                }
+                if (!occupationalHealthcareEntryValues.sickLeave.endDate) {
+                    errors.sickLeave.endDate = requiredError;
+                } else if (!dateRegex.test(occupationalHealthcareEntryValues.sickLeave.endDate)) {
+                    errors.sickLeave.endDate = invalidDateError;
+                }
+                return errors;
+            };
+
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+
+        case Type.HealthCheck:
+            initialValues = {
+                type: type,
+                date: "",
+                description: "",
+                specialist: "",
+                diagnosisCodes: [],
+                healthCheckRating: HealthCheckRating['Healthy']
+            };
+
+            validate = (values: EntryFormValues) => {
+                const healthCheckEntryValues = values as HealthCheckEntryFormValues;
+                const requiredError = "Field is required";
+                const invalidDateError = "Invalid date format";
+                const dateRegex = /^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i;
+                const errors = {
+                    type: '',
+                    date: '',
+                    description: '',
+                    specialist: '',
+                    healthCheckRating: ''
+                };
+
+                if (!healthCheckEntryValues.type) {
+                    errors.type = requiredError;
+                }
+                if (!healthCheckEntryValues.date) {
+                    errors.date = requiredError;
+                } else if (!dateRegex.test(healthCheckEntryValues.date)) {
+                    errors.date = invalidDateError;
+                }
+                if (!healthCheckEntryValues.description) {
+                    errors.description = requiredError;
+                }
+                if (!healthCheckEntryValues.specialist) {
+                    errors.specialist = requiredError;
+                }
+                if (!healthCheckEntryValues.healthCheckRating) {
+                    errors.healthCheckRating = requiredError;
+                }
+                return errors;
+            };
+
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+
+        default:
+            return null;
+    }
 };
 
 export default AddEntryForm;
