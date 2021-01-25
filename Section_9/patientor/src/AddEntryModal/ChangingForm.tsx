@@ -9,11 +9,11 @@ import { HealthCheckInputs, HospitalInputs, OccupationalInputs } from './Changin
 interface Props {
     initialValues: EntryFormValues;
     onSubmit: (values: EntryFormValues) => void;
-    onCancel: () => void;
+    onClose: () => void;
     validate: (values: EntryFormValues) => void | object;
 }
 
-const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, validate }) => {
+const ChangingForm = ({ initialValues, onSubmit, onClose, validate }: Props) => {
     const [{ diagnoses }] = useStateValue();
     return (
         <Formik
@@ -22,7 +22,7 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
             onSubmit={onSubmit}
             validate={validate}
         >
-            {({ isValid, values, setFieldValue, setFieldTouched }) => {
+            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
                 let changingInputs: JSX.Element = <></>;
 
                 switch (initialValues.type) {
@@ -77,7 +77,7 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
                         {changingInputs}
                         <Grid>
                             <Grid.Column floated="left" width={5}>
-                                <Button type="button" onClick={onCancel} color="red">
+                                <Button type="button" onClick={onClose} color="red">
                                     Cancel
                                 </Button>
                             </Grid.Column>
@@ -86,6 +86,7 @@ const ChangingForm: React.FC<Props> = ({ initialValues, onSubmit, onCancel, vali
                                     type="submit"
                                     floated="right"
                                     color="green"
+                                    disabled={!dirty || !isValid}
                                 >
                                     Add
                                 </Button>

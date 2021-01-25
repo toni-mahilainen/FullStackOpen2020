@@ -6,10 +6,12 @@ import ChangingForm from './ChangingForm';
 interface Props {
     type: Type.Hospital | Type.OccupationalHealthcare | Type.HealthCheck;
     onSubmit: (values: EntryFormValues) => void;
-    onCancel: () => void;
+    onClose: () => void;
 }
 
-const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
+const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
+    console.log('onSubmit', onSubmit);
+
     let initialValues: EntryFormValues = {
         type: type,
         date: "",
@@ -65,7 +67,7 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                         criteria: ''
                     }
                 };
-
+                
                 if (!hospitalEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(values.date)) {
@@ -88,7 +90,7 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                 return errors;
             };
 
-            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onClose={onClose} validate={validate} />;
 
         case Type.OccupationalHealthcare:
             initialValues = {
@@ -148,7 +150,7 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                 return errors;
             };
 
-            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onClose={onClose} validate={validate} />;
 
         case Type.HealthCheck:
             initialValues = {
@@ -190,7 +192,7 @@ const AddEntryForm: React.FC<Props> = ({ type, onSubmit, onCancel }) => {
                 return errors;
             };
 
-            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onCancel={onCancel} validate={validate} />;
+            return <ChangingForm initialValues={initialValues} onSubmit={onSubmit} onClose={onClose} validate={validate} />;
 
         default:
             return null;
