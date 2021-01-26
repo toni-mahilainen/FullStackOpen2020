@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Header, Icon, Label, List, Segment } from 'semantic-ui-react';
-import { Entry, HealthIconColor, Type } from '../types';
+import { Entry, HealthIconColor } from '../types';
 import { assertNever } from '../utils';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 const EntryDetails: React.FC<Props> = ({ entry, diagnosisCodes }) => {
     switch (entry.type) {
-        case Type.HealthCheck:
+        case 'HealthCheck':
             let healthIconColor: HealthIconColor = undefined;
             switch (entry.healthCheckRating) {
                 case 0:
@@ -47,7 +47,7 @@ const EntryDetails: React.FC<Props> = ({ entry, diagnosisCodes }) => {
                 </Segment>
             );
 
-        case Type.Hospital:
+        case 'Hospital':
             const discharge = entry.discharge ?
                 <>
                     <Divider />
@@ -77,7 +77,7 @@ const EntryDetails: React.FC<Props> = ({ entry, diagnosisCodes }) => {
                 </Segment>
             );
 
-        case Type.OccupationalHealthcare:
+        case 'OccupationalHealthcare':
             const sickLeave = entry.sickLeave ?
                 <>
                     <Divider />

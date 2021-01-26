@@ -1,10 +1,11 @@
+import { FormikErrors } from 'formik';
 import React from 'react';
 
 import { Type, EntryFormValues, HospitalEntryFormValues, OccupationalEntryFormValues, HealthCheckEntryFormValues, HealthCheckRating } from '../types';
 import ChangingForm from './ChangingForm';
 
 interface Props {
-    type: Type.Hospital | Type.OccupationalHealthcare | Type.HealthCheck;
+    type: string;
     onSubmit: (values: EntryFormValues) => void;
     onClose: () => void;
 }
@@ -13,7 +14,7 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
     console.log('onSubmit', onSubmit);
 
     let initialValues: EntryFormValues = {
-        type: type,
+        type: 'Hospital',
         date: "",
         description: "",
         specialist: "",
@@ -24,24 +25,15 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
         }
     } as HospitalEntryFormValues;
 
-    let validate: (values: EntryFormValues) => object = () => {
-        const errors = {
-            type: '',
-            date: '',
-            description: '',
-            specialist: '',
-            discharge: {
-                date: '',
-                criteria: ''
-            }
-        };
+    let validate = (_values: EntryFormValues): object => {
+        const errors: FormikErrors<EntryFormValues> = {};
         return errors;
     };
 
     switch (type) {
         case Type.Hospital:
             initialValues = {
-                type: type,
+                type: 'Hospital',
                 date: "",
                 description: "",
                 specialist: "",
@@ -52,7 +44,7 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
                 }
             };
 
-            validate = (values: EntryFormValues) => {
+            validate = (values: EntryFormValues): object => {
                 const hospitalEntryValues = values as HospitalEntryFormValues;
                 const requiredError = "Field is required";
                 const invalidDateError = "Invalid date format";
@@ -61,13 +53,9 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
                     type: '',
                     date: '',
                     description: '',
-                    specialist: '',
-                    discharge: {
-                        date: '',
-                        criteria: ''
-                    }
+                    specialist: ''
                 };
-                
+
                 if (!hospitalEntryValues.date) {
                     errors.date = requiredError;
                 } else if (!dateRegex.test(values.date)) {
@@ -79,14 +67,7 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
                 if (!hospitalEntryValues.specialist) {
                     errors.specialist = requiredError;
                 }
-                if (!hospitalEntryValues.discharge.date) {
-                    errors.discharge.date = requiredError;
-                } else if (!dateRegex.test(hospitalEntryValues.discharge.date)) {
-                    errors.discharge.date = invalidDateError;
-                }
-                if (!hospitalEntryValues.discharge.criteria) {
-                    errors.discharge.criteria = requiredError;
-                }
+                
                 return errors;
             };
 
@@ -94,7 +75,7 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
 
         case Type.OccupationalHealthcare:
             initialValues = {
-                type: type,
+                type: 'OccupationalHealthcare',
                 date: "",
                 description: "",
                 specialist: "",
@@ -154,7 +135,7 @@ const AddEntryForm = ({ type, onSubmit, onClose }: Props) => {
 
         case Type.HealthCheck:
             initialValues = {
-                type: type,
+                type: 'HealthCheck',
                 date: "",
                 description: "",
                 specialist: "",

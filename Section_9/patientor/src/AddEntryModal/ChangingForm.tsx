@@ -13,16 +13,22 @@ interface Props {
     validate: (values: EntryFormValues) => void | object;
 }
 
+// const typeOptions: TypeOption[] = [
+//     { label: Type.Hospital, value: Type.Hospital },
+//     { label: Type.OccupationalHealthcare, value: Type.OccupationalHealthcare },
+//     { label: Type.HealthCheck, value: Type.HealthCheck }
+// ];
+
 const ChangingForm = ({ initialValues, onSubmit, onClose, validate }: Props) => {
     const [{ diagnoses }] = useStateValue();
     return (
         <Formik
-            enableReinitialize
+            enableReinitialize={true}
             initialValues={initialValues}
             onSubmit={onSubmit}
             validate={validate}
         >
-            {({ isValid, dirty, values, setFieldValue, setFieldTouched }) => {
+            {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
                 let changingInputs: JSX.Element = <></>;
 
                 switch (initialValues.type) {
@@ -44,13 +50,13 @@ const ChangingForm = ({ initialValues, onSubmit, onClose, validate }: Props) => 
 
                 return (
                     <Form className="form ui">
-                        <Field
+                        {/* <Field
                             label="Type"
                             placeholder="Type"
                             name="type"
                             value={values.type}
                             component={TextField}
-                        />
+                        /> */}
                         <Field
                             label="Date"
                             placeholder="Date"
