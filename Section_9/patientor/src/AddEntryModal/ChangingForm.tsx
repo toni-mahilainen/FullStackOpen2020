@@ -3,14 +3,15 @@ import React from 'react';
 import { Button, Grid } from 'semantic-ui-react';
 import { DiagnosisSelection, TextField } from '../AddPatientModal/FormField';
 import { useStateValue } from '../state';
-import { EntryFormValues, Type } from '../types';
-import { HealthCheckInputs, HospitalInputs, OccupationalInputs } from './ChangingInputs';
+import { EntryFormValues } from '../types';
+import ChangingInputs from './ChangingInputs';
+import * as yup from "yup";
 
 interface Props {
     initialValues: EntryFormValues;
     onSubmit: (values: EntryFormValues) => void;
     onClose: () => void;
-    validate: (values: EntryFormValues) => void | object;
+    validationSchema: yup.AnySchema;
 }
 
 // const typeOptions: TypeOption[] = [
@@ -19,34 +20,34 @@ interface Props {
 //     { label: Type.HealthCheck, value: Type.HealthCheck }
 // ];
 
-const ChangingForm = ({ initialValues, onSubmit, onClose, validate }: Props) => {
+const ChangingForm = ({ initialValues, onSubmit, onClose, validationSchema }: Props) => {
     const [{ diagnoses }] = useStateValue();
     return (
         <Formik
             enableReinitialize={true}
             initialValues={initialValues}
             onSubmit={onSubmit}
-            validate={validate}
+            validationSchema={validationSchema}
         >
             {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
-                let changingInputs: JSX.Element = <></>;
+                // let changingInputs: JSX.Element = <></>;
 
-                switch (initialValues.type) {
-                    case Type.Hospital:
-                        changingInputs = <HospitalInputs />;
-                        break;
+                // switch (initialValues.type) {
+                //     case Type.Hospital:
+                //         changingInputs = <HospitalInputs />;
+                //         break;
 
-                    case Type.OccupationalHealthcare:
-                        changingInputs = <OccupationalInputs />;
-                        break;
+                //     case Type.OccupationalHealthcare:
+                //         changingInputs = <OccupationalInputs />;
+                //         break;
 
-                    case Type.HealthCheck:
-                        changingInputs = <HealthCheckInputs />;
-                        break;
+                //     case Type.HealthCheck:
+                //         changingInputs = <HealthCheckInputs />;
+                //         break;
 
-                    default:
-                        return null;
-                }
+                //     default:
+                //         return null;
+                // }
 
                 return (
                     <Form className="form ui">
@@ -80,7 +81,7 @@ const ChangingForm = ({ initialValues, onSubmit, onClose, validate }: Props) => 
                             setFieldTouched={setFieldTouched}
                             diagnoses={Object.values(diagnoses)}
                         />
-                        {changingInputs}
+                        <ChangingInputs type={initialValues.type} />
                         <Grid>
                             <Grid.Column floated="left" width={5}>
                                 <Button type="button" onClick={onClose} color="red">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Segment } from 'semantic-ui-react';
+import { Button, Divider, Header, Modal, Segment } from 'semantic-ui-react';
 import AddEntryForm from './AddEntryForm';
 import { useStateValue } from '../state';
 import { EntryFormValues, Type } from '../types';
@@ -19,9 +19,11 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, error }: Props) => {
             <Modal.Header>Add a new entry - {patient?.name}</Modal.Header>
             <Modal.Content>
                 {error && <Segment inverted color="red">{`Error: ${error}`}</Segment>}
+                <Header as='h4'>Select type</Header>
                 <Button onClick={() => setType(Type.Hospital)}>Hospital</Button>
                 <Button onClick={() => setType(Type.OccupationalHealthcare)}>Occupational Healthcare</Button>
                 <Button onClick={() => setType(Type.HealthCheck)}>Health Check</Button>
+                <Divider />
                 <AddEntryForm type={type} onSubmit={onSubmit} onClose={onClose} />
             </Modal.Content>
         </Modal>
