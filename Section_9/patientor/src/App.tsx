@@ -11,54 +11,53 @@ import PatientListPage from "./PatientListPage";
 import PatientInfoPage from "./PatientInfoPage";
 
 const App: React.FC = () => {
-    const [, dispatch] = useStateValue();
-    React.useEffect(() => {
-        axios.get<void>(`${apiBaseUrl}/ping`);
+  const [, dispatch] = useStateValue();
+  React.useEffect(() => {
+    axios.get<void>(`${apiBaseUrl}/ping`);
 
-        const fetchPatientList = async () => {
-            try {
-                const { data: patientListFromApi } = await axios.get<Patient[]>(
-                    `${apiBaseUrl}/patients`
-                );
-                console.log('patientListFromApi', patientListFromApi);
-                
-                dispatch(setPatientList(patientListFromApi));
-            } catch (e) {
-                console.error(e);
-            }
-        };
+    const fetchPatientList = async () => {
+      try {
+        const { data: patientListFromApi } = await axios.get<Patient[]>(
+          `${apiBaseUrl}/patients`
+        );
 
-        const fetchDiagnosis = async () => {
-            try {
-                const { data: diagnoses } = await axios.get<Diagnosis[]>(
-                    `${apiBaseUrl}/diagnoses`
-                );
-                dispatch(setDiagnoses(diagnoses));
-            } catch (e) {
-                console.error(e);
-            }
-        };
-        fetchPatientList();
-        fetchDiagnosis();
-    }, [dispatch]);
+        dispatch(setPatientList(patientListFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
 
-    return (
-        <div className="App">
-            <Router>
-                <Container>
-                    <Header as="h1">Patientor</Header>
-                    <Button as={Link} to="/" primary>
-                        Home
-                    </Button>
-                    <Divider hidden />
-                    <Switch>
-                        <Route path="/:id" render={() => <PatientInfoPage />} />
-                        <Route path="/" render={() => <PatientListPage />} />
-                    </Switch>
-                </Container>
-            </Router>
-        </div>
-    );
+    const fetchDiagnosis = async () => {
+      try {
+        const { data: diagnoses } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnoses(diagnoses));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    fetchPatientList();
+    fetchDiagnosis();
+  }, [dispatch]);
+
+  return (
+    <div className="App">
+      <Router>
+        <Container>
+          <Header as="h1">Patientor</Header>
+          <Button as={Link} to="/" primary>
+            Home
+          </Button>
+          <Divider hidden />
+          <Switch>
+            <Route path="/:id" render={() => <PatientInfoPage />} />
+            <Route path="/" render={() => <PatientListPage />} />
+          </Switch>
+        </Container>
+      </Router>
+    </div>
+  );
 };
 
 export default App;
